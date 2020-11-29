@@ -29,8 +29,14 @@ async def send():
         else:
             s3=s4=0
         
-        if not s1==s2==s3==s4:
+        if s1!=s2!=s3!=s4:
             s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
+            await channel.send(s)
+        elif s1!=s2:
+            s=s1+'\n'+s2
+            await channel.send(s)
+        elif s3!=s4:
+            s=s3+'\n'+s4
             await channel.send(s)
         await asyncio.sleep(1200)
 bot.loop.create_task(send())
