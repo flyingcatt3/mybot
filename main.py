@@ -29,7 +29,7 @@ async def send():
         else:
             s3=s4=0
         
-        if s1!=s2!=s3!=s4:
+        if s1!=s2 and s3!=s4:
             s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
             await channel.send(s)
         elif s1!=s2:
