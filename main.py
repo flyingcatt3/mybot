@@ -39,7 +39,7 @@ async def send():
             s=s3+'\n'+s4
             await channel.send(s)
         await asyncio.sleep(180)
-        if bot.is_closed:
+        if bot.is_closed():
             bot.loop.create_task(send())
             bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
 bot.loop.create_task(send())
