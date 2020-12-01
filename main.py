@@ -38,6 +38,6 @@ async def send():
         elif s3!=s4:
             s=s3+'\n'+s4
             await channel.send(s)
-        await asyncio.sleep(1200)
+        await asyncio.sleep(180)
 bot.loop.create_task(send())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
