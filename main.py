@@ -8,6 +8,7 @@ bot=commands.Bot(command_prefix='/')
 @bot.event
 async def on_ready():
     print("ONLINE")
+@bot.event
 async def send():
     await bot.wait_until_ready()
     channel=bot.get_channel(701153967412871268)
