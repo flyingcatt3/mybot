@@ -12,7 +12,7 @@ async def send():
     await bot.wait_until_ready()
     channel=bot.get_channel(701153967412871268)
     oldtime_LEA=oldtime_gw=0
-    while not bot.is_closed():
+    while True:
         newtime_LEA=scraper('time','LearningEnglishAmericanWay')
         if newtime_LEA!=oldtime_LEA:
             s1=scraper('text','LearningEnglishAmericanWay')
