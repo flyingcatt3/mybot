@@ -40,4 +40,4 @@ async def send():
             await channel.send(s)
         await asyncio.sleep(1200)
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
-asyncio.set_event_loop(send())
+bot.loop(send())
