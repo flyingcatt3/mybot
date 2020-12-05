@@ -8,21 +8,19 @@ bot=commands.Bot(command_prefix='/')
 async def send():
     await bot.wait_until_ready()
     channel=bot.get_channel(701153967412871268)
-    oldtime_LEA=oldtime_gw=0
+    oldurl_LEA=oldurl_gw=0
     while True:
-        newtime_LEA=scraper('time','LearningEnglishAmericanWay')
-        if newtime_LEA!=oldtime_LEA:
+        newurl_LEA=scraper('post_url','LearningEnglishAmericanWay')
+        if newurl_LEA!=oldurl_LEA:
             s1=scraper('text','LearningEnglishAmericanWay')
-            s2=scraper('post_url','LearningEnglishAmericanWay')
-            oldtime_LEA=newtime_LEA
+            oldurl_LEA=s2=newurl_LEA
         else:
             s1=s2=0
 
-        newtime_gw=scraper('time','gainwind')
-        if newtime_gw!=oldtime_gw:
+        newurl_gw=scraper('post_url','gainwind')
+        if newurl_gw!=oldurl_gw:
             s3=scraper('text','gainwind')
-            s4=scraper('post_url','gainwind')
-            oldtime_gw=newtime_gw
+            oldurl_gw=s4=newurl_gw
         else:
             s3=s4=0
         
