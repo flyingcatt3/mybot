@@ -5,7 +5,6 @@ from facebook_scraper import get_posts
 def scraper(sort,target):
     return ([post[sort] for post in get_posts(target, pages=1)][-1])
 bot=commands.Bot(command_prefix='/')
-@tasks.loop()
 async def send():
     await bot.wait_until_ready()
     channel=bot.get_channel(701153967412871268)
@@ -36,6 +35,6 @@ async def send():
         elif s3!=s4:
             s=s3+'\n'+s4
             await channel.send(s)
-        await asyncio.sleep(1200)
+        await asyncio.sleep(300)
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
-send.start()
+bot.loop.create_task(send())
