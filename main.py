@@ -35,7 +35,7 @@ async def scrape():
             s=s3+'\n'+s4
             #await channel.send('debug-GW'+str(i))
         if s!=0:
-            await channel.send(content=s,embed=Embed.Empty)
+            await channel.send(s)
             s=0
             j+=1
         else:
