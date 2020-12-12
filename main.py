@@ -38,15 +38,8 @@ async def scrape():
             s=0
             j+=1
             await channel.send(s+'\n'+str(j))
-        else:
-            await channel.send(content='debug-NONE-'+str(i),delete_after=1)
-        await asyncio.sleep(10)
-        await bot.connect()
-@bot.event
-async def on_error():
-    await bot.close()
-    await bot.connect()
-    channel=bot.get_channel(701153967412871268)
-    await channel.send('reconnect')
+        #else:
+            #await channel.send(content='debug-NONE-'+str(i),delete_after=1)
+        await asyncio.sleep(1800)
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
