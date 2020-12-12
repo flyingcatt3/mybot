@@ -39,6 +39,6 @@ async def scrape():
             await channel.send('debug-GW'+str(i))
         else:
             await channel.send('debug-NONE'+str(i))
-        await asyncio.sleep(300)
+        await asyncio.sleep(5)
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
