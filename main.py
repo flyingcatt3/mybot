@@ -34,10 +34,11 @@ async def scrape():
         elif s3!=s4:
             s=s3+'\n'+s4
             #await channel.send('debug-GW'+str(i))
+        else:
+            s=0
         if s!=0:
             j+=1
             await channel.send(s+'\n'+str(j))
-            s=0
         #else:
             #await channel.send(content='debug-NONE-'+str(i),delete_after=1)
         await asyncio.sleep(1800)
