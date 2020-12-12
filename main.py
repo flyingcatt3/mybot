@@ -28,14 +28,16 @@ async def send():
         if s1!=s2 or s3!=s4:
             s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
             await channel.send(s)
+            await channel.send('debug')
         elif s1!=s2:
             s=s1+'\n'+s2
             await channel.send(s)
+            await channel.send('debug')
         elif s3!=s4:
             s=s3+'\n'+s4
             await channel.send(s)
+            await channel.send('debug')
         await asyncio.sleep(300)
-        await channel.send('debug')
 bot.loop.create_task(send())       
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
 
