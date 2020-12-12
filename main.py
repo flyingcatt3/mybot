@@ -8,7 +8,7 @@ bot=commands.Bot(command_prefix='/')
 async def scrape():
     await bot.wait_until_ready()
     channel=bot.get_channel(701153967412871268)
-    i=oldurl_LEA=oldurl_gw=0
+    i=j=oldurl_LEA=oldurl_gw=0
     while True:
         #s13=text,s24=url
         newurl_LEA=scraper('post_url','LearningEnglishAmericanWay')
@@ -27,18 +27,21 @@ async def scrape():
         i+=1
         if s1!=s2 or s3!=s4:
             s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
-            await channel.send(s)
-            await channel.send('debug-all-'+str(i))
+            #await channel.send('debug-all-'+str(i))
         elif s1!=s2:
             s=s1+'\n'+s2
-            await channel.send(s)
-            await channel.send('debug-LEA-'+str(i))
+            #await channel.send('debug-LEA-'+str(i))
         elif s3!=s4:
             s=s3+'\n'+s4
+            #await channel.send('debug-GW'+str(i))
+        if s!=0:
             await channel.send(s)
-            await channel.send('debug-GW'+str(i))
+            s=0
+            j+=1
         else:
-            await channel.send('debug-NONE-'+str(i))
+            #await channel.send('debug-NONE-'+str(i))
+            await channel.send(asyncio.exceptions())
         await asyncio.sleep(100)
+        #it must be less than 300 and not too close to 300
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
