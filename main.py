@@ -35,9 +35,9 @@ async def scrape():
             s=s3+'\n'+s4
             #await channel.send('debug-GW'+str(i))
         if s!=0:
-            s=0
             j+=1
             await channel.send(s+'\n'+str(j))
+            s=0
         #else:
             #await channel.send(content='debug-NONE-'+str(i),delete_after=1)
         await asyncio.sleep(1800)
