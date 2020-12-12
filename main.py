@@ -1,5 +1,5 @@
-import discord, asyncio
-from discord.ext import commands,tasks
+import asyncio
+from discord.ext import commands
 from facebook_scraper import get_posts
 
 def scraper(sort,target):
@@ -9,7 +9,7 @@ async def scrape():
     #channel=bot.get_channel(701153967412871268)
     i=j=oldurl_LEA=oldurl_gw=0
     await bot.wait_until_ready()
-    while True:
+    while 1:
         #s13=text,s24=url
         newurl_LEA=scraper('post_url','LearningEnglishAmericanWay')
         if newurl_LEA!=oldurl_LEA:
@@ -39,6 +39,7 @@ async def scrape():
         if s!=0:
             j+=1
             await bot.get_channel(701153967412871268).send(s+'\n'+str(j))
+            print(j)
         #else:
             #await channel.send(content='debug-NONE-'+str(i),delete_after=1)
         await asyncio.sleep(1800)
