@@ -6,9 +6,9 @@ def scraper(sort,target):
     return ([post[sort] for post in get_posts(target, pages=1)][-1])
 bot=commands.Bot(command_prefix='/')
 async def scrape():
-    await bot.wait_until_ready()
     channel=bot.get_channel(701153967412871268)
     i=j=oldurl_LEA=oldurl_gw=0
+    await bot.wait_until_ready()
     while True:
         #s13=text,s24=url
         newurl_LEA=scraper('post_url','LearningEnglishAmericanWay')
@@ -35,12 +35,18 @@ async def scrape():
             s=s3+'\n'+s4
             #await channel.send('debug-GW'+str(i))
         if s!=0:
-            #await channel.send(s)
             s=0
             j+=1
+            await channel.send(s+'\n'+str(j))
         else:
             await channel.send(content='debug-NONE-'+str(i),delete_after=1)
         await asyncio.sleep(10)
-        #it must be less than 300 and not too close to 300
+        await bot.connect()
+@bot.event
+async def on_error():
+    await bot.close()
+    await bot.connect()
+    channel=bot.get_channel(701153967412871268)
+    await channel.send('reconnect')
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
