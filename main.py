@@ -6,7 +6,7 @@ def scraper(sort,target):
     return ([post[sort] for post in get_posts(target, pages=1)][-1])
 bot=commands.Bot(command_prefix='/')
 async def scrape():
-    channel=bot.get_channel(701153967412871268)
+    #channel=bot.get_channel(701153967412871268)
     i=j=oldurl_LEA=oldurl_gw=0
     await bot.wait_until_ready()
     while True:
@@ -38,7 +38,7 @@ async def scrape():
             s=0
         if s!=0:
             j+=1
-            await channel.send(s+'\n'+str(j))
+            await bot.get_channel(701153967412871268).send(s+'\n'+str(j))
         #else:
             #await channel.send(content='debug-NONE-'+str(i),delete_after=1)
         await asyncio.sleep(1800)
