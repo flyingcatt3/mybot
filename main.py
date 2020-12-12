@@ -35,13 +35,13 @@ async def scrape():
             s=s3+'\n'+s4
             #await channel.send('debug-GW'+str(i))
         if s!=0:
-            await channel.send(s,embed=None)
+            await channel.send(content=s,embed=None)
             s=0
             j+=1
         else:
             #await channel.send('debug-NONE-'+str(i))
             await channel.send(str(asyncio.exceptions()))
-        await asyncio.sleep(100)
+        await asyncio.sleep(10)
         #it must be less than 300 and not too close to 300
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
