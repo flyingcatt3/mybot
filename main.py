@@ -10,6 +10,7 @@ async def send():
     channel=bot.get_channel(701153967412871268)
     oldurl_LEA=oldurl_gw=0
     while True:
+        #s13=text,s24=url
         newurl_LEA=scraper('post_url','LearningEnglishAmericanWay')
         if newurl_LEA!=oldurl_LEA:
             s1=scraper('text','LearningEnglishAmericanWay')
@@ -33,7 +34,8 @@ async def send():
         elif s3!=s4:
             s=s3+'\n'+s4
             await channel.send(s)
-        await asyncio.sleep(100)
+        await asyncio.sleep(300)
+        await channel.send('debug')
 bot.loop.create_task(send())       
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
 
