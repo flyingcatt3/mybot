@@ -28,17 +28,17 @@ async def scrape():
         if s1!=s2 or s3!=s4:
             s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
             await channel.send(s)
-            await channel.send('debug-all-'+i)
+            await channel.send('debug-all-'+str(i))
         elif s1!=s2:
             s=s1+'\n'+s2
             await channel.send(s)
-            await channel.send('debug-LEA-'+i)
+            await channel.send('debug-LEA-'+str(i))
         elif s3!=s4:
             s=s3+'\n'+s4
             await channel.send(s)
-            await channel.send('debug-GW'+i)
+            await channel.send('debug-GW'+str(i))
         else:
-            await channel.send('debug-NONE'+i)
+            await channel.send('debug-NONE'+str(i))
         asyncio.sleep(300)
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
