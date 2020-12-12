@@ -1,2 +1,2 @@
-discord.py==1.5.1
-facebook_scraper==0.2.17
+discord.py
+facebook_scraper
