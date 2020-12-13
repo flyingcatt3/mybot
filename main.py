@@ -1,4 +1,4 @@
-import asyncio,logging
+import asyncio,logging,re
 from discord.ext import commands
 from facebook_scraper import get_posts
 
@@ -29,9 +29,8 @@ async def scrape():
 
         newurl_qmo=scraper('post_url','qmoleenglish',0)
         if newurl_qmo!=oldurl_qmo:
-            s5=scraper('text','qmoleenglish',0)
-            s7=scraper('images','qmoleenglish',0)
-            s7='\n'.join(s7)
+            s5=("".join('\n'.join(scraper('text','qmoleenglish',0)).split('#')[0])).replace('\n\n','$').replace('\n','').replace('$','\n')
+            s7='\n'.join(scraper('images','qmoleenglish',0))
             oldurl_qmo=s6=newurl_qmo
         else:
             s5=s6=s7='0'
