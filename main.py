@@ -46,15 +46,16 @@ async def scrape():
             s=s3+'\n'+s4
         else:
             s=0
-        if s!=0 or s5!=0:
+        if s!=0 or s5!='0':
             j+=1
             logging.info(j)
             if s!=0:
                 await bot.get_channel(701153967412871268).send(s+'\n')
             if s5!=0:
-                await bot.get_channel(701153967412871268).send(s5+s6+'\n')
+                await bot.get_channel(701153967412871268).send(s5+'\n'+s6+'\n')
                 if s7!=0:
                     await bot.get_channel(701153967412871268).send(s7+'\n')
+                    await bot.get_channel(701153967412871268).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
             await bot.get_channel(701153967412871268).send(str(j))
         await asyncio.sleep(300)
 logging.basicConfig(level=logging.INFO)
