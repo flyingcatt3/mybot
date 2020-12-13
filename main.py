@@ -1,4 +1,4 @@
-import asyncio
+import asyncio,logging
 from discord.ext import commands
 from facebook_scraper import get_posts
 
@@ -38,10 +38,11 @@ async def scrape():
             s=0
         if s!=0:
             j+=1
-            print(j)
+            logging.info(j)
             await bot.get_channel(701153967412871268).send(s+'\n'+str(j))
         #else:
             #await channel.send(content='debug-NONE-'+str(i),delete_after=1)
         await asyncio.sleep(300)
+logging.basicConfig(level=logging.INFO)
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
