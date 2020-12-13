@@ -16,14 +16,14 @@ async def scrape():
             s1=scraper('text','LearningEnglishAmericanWay')
             oldurl_LEA=s2=newurl_LEA
         else:
-            s1=s2=0
+            s1=s2='0'
 
         newurl_gw=scraper('post_url','gainwind')
         if newurl_gw!=oldurl_gw:
             s3=scraper('text','gainwind')
             oldurl_gw=s4=newurl_gw
         else:
-            s3=s4=0
+            s3=s4='0'
         i+=1
         if s1!=s2 or s3!=s4:
             s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
@@ -42,6 +42,6 @@ async def scrape():
             sys.stdout.write(str(j) + '\n')
         #else:
             #await channel.send(content='debug-NONE-'+str(i),delete_after=1)
-        await asyncio.sleep(1800)
+        await asyncio.sleep(300)
 bot.loop.create_task(scrape())
 bot.run("NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.zLwqJ4OjksO5NcEEIOBYYGbl5_4")
