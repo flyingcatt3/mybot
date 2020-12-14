@@ -1,19 +1,22 @@
-import asyncio,logging,re
+import asyncio,logging
 from discord.ext import commands
 from facebook_scraper import get_posts
 
 def scraper(sort,target,N):
-    return ([post[sort] for post in get_posts(target, pages=1)][N])
+    return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
 bot=commands.Bot(command_prefix='/')
 async def scrape():
-    
+
     #define
     i=j=oldurl_LEA=oldurl_gw=oldurl_qmo=0
 
     await bot.wait_until_ready()
     while 1:
         #s135=text,s246=url,s7=images
-        newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
+        try:
+            newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
+        except:
+            continue
         if newurl_LEA!=oldurl_LEA:
             s1=scraper('text','LearningEnglishAmericanWay',-1)
             oldurl_LEA=s2=newurl_LEA
@@ -50,10 +53,11 @@ async def scrape():
             logging.info(j)
             if s!=0:
                 await bot.get_channel(701153967412871268).send(s+'\n')
-            if s5!=0:
-                await bot.get_channel(701153967412871268).send(s5+'\n'+s6+'\n')
-                if s7!=0:
+            if s5!='0':
+                await bot.get_channel(701153967412871268).send(s5+'\n')
+                if s7!='0':
                     await bot.get_channel(701153967412871268).send(s7+'\n')
+                    await bot.get_channel(701153967412871268).send(s6+'\n')
                     await bot.get_channel(701153967412871268).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
             await bot.get_channel(701153967412871268).send(str(j))
         await asyncio.sleep(300)
