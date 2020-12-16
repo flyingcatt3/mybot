@@ -117,7 +117,7 @@ async def starburst(ctx):
 async def ot(ctx):
     end=time.time()
     await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600),1)+' h:hourglass_flowing_sand:')
-@bot.on_command_error(gsat())
+@bot.on_command_error(exception=MissingRequiredArgument,context=gsat)
 async def error():
     await bot.get_channel(channel1).send(":x:Please provide the time of GSAT.")
 start = time.time()
