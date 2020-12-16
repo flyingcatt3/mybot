@@ -10,6 +10,7 @@ token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
 channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
+gsattime=0
 async def scrape():
     await bot.wait_until_ready()
 
@@ -72,7 +73,7 @@ async def scrape():
         
 @bot.command()
 async def ping(ctx):
-    await ctx.send(':ping_pong:  '+str(round(100*bot.latency)))
+    await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
 @bot.command()
 async def gi(ctx):
     guild = ctx.guild
@@ -81,36 +82,22 @@ async def gi(ctx):
     embed.add_field(name="功能不斷增加中",value=guild.name)
     await ctx.send(embed=embed)
 @bot.command()
-async def gsat(ctx,sort,date):
-    gsattime=0
+async def gsat(ctx,date):
     now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
-    if sort == 'set':
-        if date.isdigit() and len(date)==8:
-            if date >= now:
-                await ctx.send(':white_check_mark:Set up Succeedfully.')
-                gsattime=date
-            elif date == now:
-                await ctx.send(':x:The date you specified is today.')
-        elif date == 'help':
-            await ctx.send('e.g. πgsat set 20221106')
-        
-        else:
-            await ctx.send(":x:Format error."+"'\n'"+"For help, type `πgsat set help`")
-    elif sort == None:
-        if gsattime==0:
-            await ctx.send(":x:The time of gsat is not set up yet."+"'\n'"+"To set up, type `πgsat set TIME`")
-        else:
-            remaining=gsattime-date
-            if remaining==1:
-                await ctx.send("Time remaining: **1 day**")
-            elif remaining<=0:
-                await ctx.send("Already happened.")
-            else:
-                await ctx.send(f"Time remaining: **{remaining} days**")
+    if date.isdigit() and len(date)==8:
+        if date >= now:
+            await ctx.send(':white_check_mark:Set up Succeedfully.')
+            gsattime=date
+        elif date == now:
+            await ctx.send(':x:The date you specified is today.')
+    elif date == 'help':
+        await ctx.send('e.g. πgsat 20221106')
+    else:
+        await ctx.send(":x:Format error."+"'\n'"+"For help, type `πgsat help`")
 @bot.command()
 async def starburst(ctx):
     await ctx.send('https://hbl917070.cf/img/murl/SgsU3cr.jpg')
-    if random.randint(1, 10):
+    if random.randint(1, 10)==1:
         await ctx.send('原來你沒收到封測的邀請嗎？')
 @bot.command()
 async def ot(ctx):
@@ -120,7 +107,18 @@ async def ot(ctx):
 @gsat.error
 async def error(ctx,error):
     if isinstance(error,commands.errors.MissingRequiredArgument):
-        await ctx.send(":x:Please provide the time of GSAT.")
+        if gsattime==0:
+            await ctx.send(":x:The time of gsat is not set up yet."+"'\n'"+"To set up, type `πgsat set TIME`")
+        else:
+            now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
+            remaining=gsattime-now
+            if remaining==1:
+                await ctx.send("Time remaining: **1 day**")
+            elif remaining<=0:
+                await ctx.send("Already happened.")
+            else:
+                await ctx.send(f"Time remaining: **{remaining} days**")
+        
 start = time.time()
 bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.INFO)
