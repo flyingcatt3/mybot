@@ -1,4 +1,4 @@
-import asyncio,logging,traceback,discord,time,random
+import asyncio,logging,traceback,discord,time,random,math
 from discord.ext import commands
 from facebook_scraper import get_posts
 
@@ -7,6 +7,7 @@ def scraper(sort,target,N):
 #define
 bot=commands.Bot(command_prefix='π')
 token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
+channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
 async def scrape():
@@ -57,16 +58,16 @@ async def scrape():
                 j+=1
                 logging.info(j)
                 if s!=0:
-                    await bot.get_channel(701153967412871268).send(s+'\n')
+                    await bot.get_channel(channel1).send(s+'\n')
                 if s5!='0':
-                    await bot.get_channel(701153967412871268).send(s5+'\n')
+                    await bot.get_channel(channel1).send(s5+'\n')
                     if s7!='0':
-                        await bot.get_channel(701153967412871268).send(s7+'\n')
-                        await bot.get_channel(701153967412871268).send(s6+'\n')
-                        await bot.get_channel(701153967412871268).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
-                await bot.get_channel(701153967412871268).send(str(j))       
+                        await bot.get_channel(channel1).send(s7+'\n')
+                        await bot.get_channel(channel1).send(s6+'\n')
+                        await bot.get_channel(channel1).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
+                await bot.get_channel(channel1).send(str(j))       
         except:
-            await bot.get_channel(701153967412871268).send(err)
+            await bot.get_channel(channel1).send(err)
         await asyncio.sleep(300)
         
 @bot.command()
@@ -85,22 +86,20 @@ async def gsat(ctx,sort,date):
     def now():
         return int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
     if sort == 'set':
-        try:#Determine if the variable 'date' is defined
-            if date.isdigit() and len(date)==8:
-                if date >= now():
-                    await ctx.send(':white_check_mark:Set up Succeedfully.')
-                    gsattime=date
-                elif date == now():
-                    await ctx.send(':x:The date you specified is today.')
-            elif date == 'help':
-                await ctx.send('e.g. πgsat set 20221106')
-            else:
-                await ctx.send(":x:Format error.'\n'For help, type `πgsat set help`")
-        except:
-            await ctx.send(":x:Please provide the time of GSAT.")
+        if date.isdigit() and len(date)==8:
+            if date >= now():
+                await ctx.send(':white_check_mark:Set up Succeedfully.')
+                gsattime=date
+            elif date == now():
+                await ctx.send(':x:The date you specified is today.')
+        elif date == 'help':
+            await ctx.send('e.g. πgsat set 20221106')
+        
+        else:
+            await ctx.send(":x:Format error."+"'\n'"+"For help, type `πgsat set help`")
     elif sort == None:
         if gsattime==0:
-            await ctx.send(":x:The time of gsat is not set up yet.'\n'To set up, type `πgsat set TIME`")
+            await ctx.send(":x:The time of gsat is not set up yet."+"'\n'"+"To set up, type `πgsat set TIME`")
         else:
             remaining=gsattime-date
             if remaining==1:
@@ -117,7 +116,10 @@ async def starburst(ctx):
 @bot.command()
 async def ot(ctx):
     end=time.time()
-    await ctx.send(':hourglass:Operated for '+str((end-start)/3600)+' h:hourglass_flowing_sand:')
+    await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600),1)+' h:hourglass_flowing_sand:')
+@bot.on_command_error(gsat())
+async def error():
+    await bot.get_channel(channel1).send(":x:Please provide the time of GSAT.")
 start = time.time()
 bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.INFO)
