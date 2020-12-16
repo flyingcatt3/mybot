@@ -9,7 +9,7 @@ channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
 start = time.time()
-
+gsattime=sendvalue=0
 
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
@@ -72,6 +72,9 @@ async def scrape():
         except Exception:
             await bot.get_channel(channel1).send(err)
             pass
+        if sendvalue==1:
+            end = time.time()
+            await bot.get_channel(channel1).send(':hourglass:Operated for '+str(round((end-start)/3600,1))+' h:hourglass_flowing_sand:'+'\n'+f'Times of scraping::white_check_mark:   {j}||:x:    {i}')
         await asyncio.sleep(300)
         
 @bot.command()
@@ -86,7 +89,6 @@ async def gi(ctx):
     await ctx.send(embed=embed)
 @bot.command()
 async def gsat(ctx,date):
-    gsattime=0
     now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
     if date.isdigit() and len(date)==8:
         if date >= now:
@@ -104,13 +106,16 @@ async def starburst(ctx):
     if random.randint(1, 10)==1:
         await ctx.send('原來你沒收到封測的邀請嗎？')
 @bot.command()
-async def ot(ctx):
-    end=time.time()
-    await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600,1))+' h:hourglass_flowing_sand:'+'\n'+f'Times of scraping::white_check_mark:   {j}||:x:    {i}')
+async def status(ctx):
+    if sendvalue==0:
+        sendvalue=1
+        await ctx.send("Sending status is open")
+    else:
+        sendvalue==0
+        await ctx.send("Sending status is closed")
 #Error Handler
 @gsat.error
 async def gsaterr(ctx,err):
-    global gsattime,i,j
     if isinstance(err,commands.errors.MissingRequiredArgument):
         if gsattime==0:
             await ctx.send(":x:The time of gsat is not set up yet."+'\n'+"To set up, type `πgsat help`")
