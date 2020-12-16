@@ -118,7 +118,7 @@ async def ot(ctx):
     end=time.time()
     await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600),1)+' h:hourglass_flowing_sand:')
 #Error Handler
-@gsat.error()
+@gsat.error
 async def error(ctx,error):
     if isinstance(error,commands.errors.MissingRequiredArgument):
         await ctx.send(":x:Please provide the time of GSAT.")
