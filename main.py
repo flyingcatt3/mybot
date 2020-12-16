@@ -2,6 +2,17 @@ import asyncio,logging,traceback,discord,time,random,math
 from discord.ext import commands
 from facebook_scraper import get_posts
 
+#setup
+bot=commands.Bot(command_prefix='π')
+token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
+channel1=701153967412871268
+intents = discord.Intents(messages=True, guilds=True, members=True)
+discord.MemberCacheFlags(online=True)
+start = time.time()
+bot.loop.create_task(scrape())
+logging.basicConfig(level=logging.INFO)
+bot.run(token)
+
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
 
@@ -114,15 +125,3 @@ async def gsaterr(ctx,err):
                 await ctx.send("Already happened.")
             else:
                 await ctx.send(f"Time remaining: **{remaining} days**")
-        
-#setup
-bot=commands.Bot(command_prefix='π')
-token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
-channel1=701153967412871268
-intents = discord.Intents(messages=True, guilds=True, members=True)
-discord.MemberCacheFlags(online=True)
-start = time.time()
-bot.loop.create_task(scrape())
-logging.basicConfig(level=logging.INFO)
-
-bot.run(token)
