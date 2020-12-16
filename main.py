@@ -72,7 +72,7 @@ async def scrape():
         
 @bot.command()
 async def ping(ctx):
-    await ctx.send(':pingpong:  '+str(100*bot.latency))
+    await ctx.send(':ping_pong:  '+str(round(100*bot.latency)))
 @bot.command()
 async def gi(ctx):
     guild = ctx.guild
@@ -83,14 +83,13 @@ async def gi(ctx):
 @bot.command()
 async def gsat(ctx,sort,date):
     gsattime=0
-    def now():
-        return int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
+    now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
     if sort == 'set':
         if date.isdigit() and len(date)==8:
-            if date >= now():
+            if date >= now:
                 await ctx.send(':white_check_mark:Set up Succeedfully.')
                 gsattime=date
-            elif date == now():
+            elif date == now:
                 await ctx.send(':x:The date you specified is today.')
         elif date == 'help':
             await ctx.send('e.g. πgsat set 20221106')
@@ -116,7 +115,7 @@ async def starburst(ctx):
 @bot.command()
 async def ot(ctx):
     end=time.time()
-    await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600),1)+' h:hourglass_flowing_sand:')
+    await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600,1))+' h:hourglass_flowing_sand:')
 #Error Handler
 @gsat.error
 async def error(ctx,error):
