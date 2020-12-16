@@ -10,13 +10,13 @@ token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
 channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
-gsattime=0
+gsattime=i=j=0
 async def scrape():
     await bot.wait_until_ready()
 
     #define
     
-    i=j=oldurl_LEA=oldurl_gw=oldurl_qmo=0
+    oldurl_LEA=oldurl_gw=oldurl_qmo=0
     err=':x:**[ERROR]**\n'+traceback.format_exc()+'\n'+'To debug, visit https://app.kintohub.com/app/environment/5fd51313ebd88626fb287d51/services/mybot/manage/console'
 
     while 1:
@@ -102,7 +102,7 @@ async def starburst(ctx):
 @bot.command()
 async def ot(ctx):
     end=time.time()
-    await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600,1))+' h:hourglass_flowing_sand:')
+    await ctx.send(':hourglass:Operated for '+str(round((end-start)/3600,1))+' h:hourglass_flowing_sand:'+'\n'+f'Times of scraping::white_check_mark:   {j}||:x:    {i}')
 #Error Handler
 @gsat.error
 async def error(ctx,error):
