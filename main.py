@@ -4,6 +4,7 @@ from facebook_scraper import get_posts
 
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
+#define
 bot=commands.Bot(command_prefix='π')
 token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
 intents = discord.Intents(messages=True, guilds=True, members=True)
@@ -84,16 +85,19 @@ async def gsat(ctx,sort,date):
     def now():
         return int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
     if sort == 'set':
-        if date.isdigit() and len(date)==8:
-            if date >= now():
-                await ctx.send(':white_check_mark:Set up Succeedfully.')
-                gsattime=date
-            if date == now():
-                await ctx.send(':x:The date you specified is today.')
+        try:#Determine if the variable 'date' is defined
+            if date.isdigit() and len(date)==8:
+                if date >= now():
+                    await ctx.send(':white_check_mark:Set up Succeedfully.')
+                    gsattime=date
+                elif date == now():
+                    await ctx.send(':x:The date you specified is today.')
+            elif date == 'help':
+                await ctx.send('e.g. πgsat set 20221106')
             else:
                 await ctx.send(":x:Format error.'\n'For help, type `πgsat set help`")
-        if date == 'help':
-            await ctx.send('e.g. πgsat set 20221106')
+        except:
+            await ctx.send(":x:Please provide the time of GSAT.")
     elif sort == None:
         if gsattime==0:
             await ctx.send(":x:The time of gsat is not set up yet.'\n'To set up, type `πgsat set TIME`")
@@ -110,6 +114,11 @@ async def starburst(ctx):
     await ctx.send('https://hbl917070.cf/img/murl/SgsU3cr.jpg')
     if random.randint(1, 10):
         await ctx.send('原來你沒收到封測的邀請嗎？')
+@bot.command()
+async def ot(ctx):
+    end=time.time()
+    await ctx.send(':hourglass:Operated for '+str((end-start)/3600)+' h:hourglass_flowing_sand:')
+start = time.time()
 bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.INFO)
 bot.run(token)
