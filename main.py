@@ -90,10 +90,10 @@ async def gsat(ctx,date):
             gsattime=date
         elif date == now:
             await ctx.send(':x:The date you specified is today.')
-    elif date == 'help':
-        await ctx.send('e.g. πgsat 20221106')
-    else:
-        await ctx.send(":x:Format error."+"'\n'"+"For help, type `πgsat help`")
+        elif date == 'help':
+            await ctx.send('e.g. πgsat 20221106')
+        else:
+            await ctx.send(":x:Format error."+"'\n'"+"For help, type `πgsat help`")
 @bot.command()
 async def starburst(ctx):
     await ctx.send('https://hbl917070.cf/img/murl/SgsU3cr.jpg')
@@ -108,7 +108,7 @@ async def ot(ctx):
 async def error(ctx,error):
     if isinstance(error,commands.errors.MissingRequiredArgument):
         if gsattime==0:
-            await ctx.send(":x:The time of gsat is not set up yet."+"'\n'"+"To set up, type `πgsat set TIME`")
+            await ctx.send(":x:The time of gsat is not set up yet."+'\n'+"To set up, type `πgsat help`")
         else:
             now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
             remaining=gsattime-now
