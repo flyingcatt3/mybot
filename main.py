@@ -4,18 +4,12 @@ from facebook_scraper import get_posts
 
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
-#define
-bot=commands.Bot(command_prefix='π')
-token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
-channel1=701153967412871268
-intents = discord.Intents(messages=True, guilds=True, members=True)
-discord.MemberCacheFlags(online=True)
-gsattime=i=j=0
+
 async def scrape():
     await bot.wait_until_ready()
-
-    #define
     
+    #define
+    nonlocal i,j
     oldurl_LEA=oldurl_gw=oldurl_qmo=0
     err=':x:**[ERROR]**\n'+traceback.format_exc()+'\n'+'To debug, visit https://app.kintohub.com/app/environment/5fd51313ebd88626fb287d51/services/mybot/manage/console'
 
@@ -87,6 +81,7 @@ async def gsat(ctx,date):
     if date.isdigit() and len(date)==8:
         if date >= now:
             await ctx.send(':white_check_mark:Set up Succeedfully.')
+            nonlocal gsattime
             gsattime=date
         elif date == now:
             await ctx.send(':x:The date you specified is today.')
@@ -118,8 +113,15 @@ async def error(ctx,error):
                 await ctx.send("Already happened.")
             else:
                 await ctx.send(f"Time remaining: **{remaining} days**")
-        
+#setup
+bot=commands.Bot(command_prefix='π')
+token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
+channel1=701153967412871268
+intents = discord.Intents(messages=True, guilds=True, members=True)
+discord.MemberCacheFlags(online=True)
+i=j=gsattime=0
 start = time.time()
 bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.INFO)
+
 bot.run(token)
