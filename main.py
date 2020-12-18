@@ -89,6 +89,7 @@ async def gi(ctx):
     await ctx.send(embed=embed)
 @bot.command()
 async def exam(ctx,date):
+    global TIME,sort
     err=":x:Format error."+"'\n'"+"For help, type `πexam help`"
     if date == 'help':
         await ctx.send('e.g. ``.exam 公測-20221106``')
@@ -104,9 +105,9 @@ async def exam(ctx,date):
                 else:
                     now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
                 if int(date[-1]) > now:
-                    await ctx.send(':white_check_mark:Set up successfully.')
                     TIME=int(date[-1])
                     sort=date[0]
+                    await ctx.send(':white_check_mark:Set up successfully.')
                 elif int(date[-1]) == now:
                     await ctx.send(':x:The date you specified is today.')
                 else:
@@ -125,11 +126,15 @@ async def starburst(ctx):
 #Error Handler
 @exam.error
 async def examerr(ctx,err):
+    global TIME,sort
     if isinstance(err,commands.errors.MissingRequiredArgument):
         if TIME==0:
-            await ctx.send(":x:The time of exam is not set up yet."+'\n'+"To set up, type `πexam help`")
+            await ctx.send(":x:The time of exam is not set up yet."+'\n'+"To set up, type `.exam help`")
         else:
-            now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+            if time.localtime().tm_hour >= 16:
+                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
+            else:
+                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
             remaining=TIME-now
             if remaining==1:
                 await ctx.send(f"Time remaining of the **{sort}**: **1 day**")
@@ -140,15 +145,22 @@ async def examerr(ctx,err):
 
 @bot.command()#ok
 async def debug(ctx):
-    await ctx.send(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-
+    if time.localtime().tm_hour >= 16:
+        now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
+    else:
+        now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+    await ctx.send(now)
 @tasks.loop(seconds=60)
 async def countdown():
+    global TIME,sort
     day=time.localtime().tm_mday
-    while time!=0:
+    while TIME!=0:
         if time.localtime().tm_mday!=day:
             day=time.localtime().tm_mday
-            now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+            if time.localtime().tm_hour >= 16:
+                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
+            else:
+                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
             remaining=TIME-now
             await bot.wait_until_ready()
             await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
