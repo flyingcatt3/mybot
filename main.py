@@ -150,6 +150,6 @@ async def countdown():
             await bot.wait_until_ready()
             await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
             await asyncio.sleep(60)
-#xbot.loop.create_task(scrape())
+bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
