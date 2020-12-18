@@ -15,6 +15,9 @@ def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
 
 async def scrape():
+    #函式中有用到bot.~時沒有這行會報錯
+    await bot.wait_until_ready()
+
     #define
     i=j=oldurl_LEA=oldurl_gw=oldurl_qmo=0
 
@@ -23,22 +26,16 @@ async def scrape():
             newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
         
             #s135=text,s246=url,s7=images
-            if newurl_LEA!=oldurl_LEA:
+            if newurl_LEA!=oldurl_LEA and newurl_LEA!=None:
                 s1=scraper('text','LearningEnglishAmericanWay',-1)
-                if s1!='':
-                    oldurl_LEA=s2=newurl_LEA
-                else:
-                    s1=s2='0'
+                oldurl_LEA=s2=newurl_LEA
             else:
                 s1=s2='0'
 
             newurl_gw=scraper('post_url','gainwind',-1)
-            if newurl_gw!=oldurl_gw:
+            if newurl_gw!=oldurl_gw and newurl_gw!=None:
                 s3=scraper('text','gainwind',-1)
-                if s2!='':
-                    oldurl_gw=s4=newurl_gw
-                else:
-                    s3=s4='0'
+                oldurl_gw=s4=newurl_gw
             else:
                 s3=s4='0'
 
@@ -148,6 +145,7 @@ async def countdown():
             day=time.localtime().tm_mday
             now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
             remaining=TIME-now
+            await bot.wait_until_ready()
             await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
             await asyncio.sleep(60)
 bot.loop.create_task(scrape())
