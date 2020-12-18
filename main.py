@@ -8,7 +8,6 @@ token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
 channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
-start = time.time()
 TIME=sort=0 #exam
 
 def scraper(sort,target,N):
@@ -101,15 +100,16 @@ async def exam(ctx,date):
         if date.find('-')==date.rfind('-'):
             date=date.split('-')
             if date[-1].isdigit() and len(date[-1])==8 and date[0]!='':
-                if time.localtime().tm_hour >= 16:
-                    now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
+                now = datetime.datetime.now()
+                if now.hour >= 16:
+                    NOW=int(str(now.year)+str(now.month)+str(now.day+1))
                 else:
-                    now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-                if int(date[-1]) > now:
+                    NOW=int(str(now.year)+str(now.month)+str(now.day))
+                if int(date[-1]) > NOW:
                     TIME=int(date[-1])
                     sort=date[0]
                     await ctx.send(':white_check_mark:Set up successfully.')
-                elif int(date[-1]) == now:
+                elif int(date[-1]) == NOW:
                     await ctx.send(':x:The date you specified is today.')
                 else:
                     await ctx.send(':x:The date you specified is the past.')
@@ -132,12 +132,12 @@ async def examerr(ctx,err):
         if TIME==0:
             await ctx.send(":x:The time of exam is not set up yet."+'\n'+"To set up, type `.exam help`")
         else:
-            if time.localtime().tm_hour >= 16:
-                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
+            now = datetime.datetime.now()
+            if now.hour >= 16:
+                remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-now).days-1
             else:
-                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+                remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-now).days
             #remaining=TIME-now
-            remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-datetime.datetime.strptime(str(now), "%Y%m%d")).days
             if remaining==1:
                 await ctx.send(f"Time remaining of the **{sort}**: **1 day**")
             elif remaining<=0:
@@ -145,32 +145,15 @@ async def examerr(ctx,err):
             else:
                 await ctx.send(f"Time remaining of the **{sort}**: **{remaining} days**")
 
-@bot.command()#ok
-async def debug(ctx):
-    if time.localtime().tm_hour >= 16:
-        now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
-    else:
-        now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-    await ctx.send(now)
 @tasks.loop(seconds=60)
 async def countdown():
     global TIME,sort
-    if time.localtime().tm_hour >= 16:
-        day=time.localtime().tm_mday
-    else:
-        day=time.localtime().tm_mday+1
-    while TIME!=0:
-        if time.localtime().tm_mday!=day:
-            day=time.localtime().tm_mday
-            if time.localtime().tm_hour >= 16:
-                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
-            else:
-                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-            #remaining=TIME-now
-            remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-datetime.datetime.strptime(str(now), "%Y%m%d")).days
-            await bot.wait_until_ready()
-            await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
-            await asyncio.sleep(60)
+    now=datetime.datetime.now()
+    if now.hour == 16 and now.minute <= 1 and TIME!=0:
+        #remaining=TIME-now
+        remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-now).days-1
+        await bot.wait_until_ready()
+        await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
 bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
