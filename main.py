@@ -1,5 +1,5 @@
 import asyncio,logging,traceback,discord,time,random,math
-from discord.ext import commands
+from discord.ext import commands,tasks
 from facebook_scraper import get_posts
 
 #setup
@@ -15,8 +15,6 @@ def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
 
 async def scrape():
-    await bot.wait_until_ready()
-    
     #define
     i=j=oldurl_LEA=oldurl_gw=oldurl_qmo=0
 
@@ -137,24 +135,21 @@ async def examerr(ctx,err):
                 await ctx.send("Already happened.")
             else:
                 await ctx.send(f"Time remaining of the **{sort}**: **{remaining} days**")
+
 @bot.command()#ok
 async def debug(ctx):
-    
     await ctx.send(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
 
+@tasks.loop(seconds=60)
 async def countdown():
-    
-    while 1:
-        day=time.localtime().tm_mday
-        while time!=0:
-            if time.localtime().tm_mday!=day:
-                day=time.localtime().tm_mday
-                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-                remaining=TIME-now
-                await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
-                await asyncio.sleep(60)
-        await asyncio.sleep(60)
+    day=time.localtime().tm_mday
+    while time!=0:
+        if time.localtime().tm_mday!=day:
+            day=time.localtime().tm_mday
+            now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+            remaining=TIME-now
+            await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
+            await asyncio.sleep(60)
 bot.loop.create_task(scrape())
-bot.loop.create_task(countdown())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
