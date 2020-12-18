@@ -9,7 +9,7 @@ channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
 start = time.time()
-gsattime=sendvalue=0
+gsattime=0
 
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
@@ -19,7 +19,6 @@ async def scrape():
     
     #define
     i=j=oldurl_LEA=oldurl_gw=oldurl_qmo=0
-    err=':x:**[ERROR]**\n'+traceback.format_exc()+'\n'+'To debug, visit https://app.kintohub.com/app/environment/5fd51313ebd88626fb287d51/services/mybot/manage/console'
 
     while 1:
         try:
@@ -28,14 +27,20 @@ async def scrape():
             #s135=text,s246=url,s7=images
             if newurl_LEA!=oldurl_LEA:
                 s1=scraper('text','LearningEnglishAmericanWay',-1)
-                oldurl_LEA=s2=newurl_LEA
+                if s1!='':
+                    oldurl_LEA=s2=newurl_LEA
+                else:
+                    s1=s2='0'
             else:
                 s1=s2='0'
 
             newurl_gw=scraper('post_url','gainwind',-1)
             if newurl_gw!=oldurl_gw:
                 s3=scraper('text','gainwind',-1)
-                oldurl_gw=s4=newurl_gw
+                if s2!='':
+                    oldurl_gw=s4=newurl_gw
+                else:
+                    s3=s4='0'
             else:
                 s3=s4='0'
 
@@ -59,7 +64,6 @@ async def scrape():
                 s=0
             if s!=0 or s5!='0':
                 j+=1
-                logging.info(j)
                 if s!=0:
                     await bot.get_channel(channel1).send(s+'\n')
                 if s5!='0':
@@ -70,64 +74,60 @@ async def scrape():
                         await bot.get_channel(channel1).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
                 await bot.get_channel(channel1).send(str(j))
         except Exception:
+            err=':x:**[ERROR]**```\n'+traceback.format_exc()+'\n```\n'+'To debug, visit https://app.kintohub.com/app/environment/5fd51313ebd88626fb287d51/services/mybot/manage/console'
             await bot.get_channel(channel1).send(err)
             pass
-        if sendvalue==1:
-            end = time.time()
-            await bot.get_channel(channel1).send(':hourglass:Operated for '+str(round((end-start)/3600,1))+' h:hourglass_flowing_sand:'+'\n'+f'Times of scraping::white_check_mark:   {j}||:x:    {i}')
+        if i==1:
+            day=time.localtime().tm_mday
+        elif time.localtime().tm_mday!=day:
+            await bot.get_channel(channel1).send(f'New: {j}\nCheck: {i}')
         await asyncio.sleep(300)
-        
-@bot.command()
+
+@bot.command()#ok
 async def ping(ctx):
     await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
-@bot.command()
+@bot.command()#ok
 async def gi(ctx):
     guild = ctx.guild
     embed = discord.Embed(title='The bot is still under development',description="Coded by @flyingcatt3#2016",timestamp=ctx.message.created_at,color=discord.Color.red())
-    embed.add_field(name="Server Owner:",value=guild.owner)
-    embed.add_field(name="功能不斷增加中",value=guild.name)
+    embed.add_field(name="功能不斷增加中",value='ver 1.2')
     await ctx.send(embed=embed)
 @bot.command()
 async def gsat(ctx,date):
-    now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
+    now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+    if date == 'help':
+        await ctx.send('e.g. πgsat 20221106')
     if date.isdigit() and len(date)==8:
-        if date >= now:
+        if int(date) >= now:
             await ctx.send(':white_check_mark:Set up Succeedfully.')
-            gsattime=date
-        elif date == now:
+            gsattime=int(date)
+        elif int(date) == now:
             await ctx.send(':x:The date you specified is today.')
-        elif date == 'help':
-            await ctx.send('e.g. πgsat 20221106')
         else:
             await ctx.send(":x:Format error."+"'\n'"+"For help, type `πgsat help`")
-@bot.command()
+@bot.command()#ok
 async def starburst(ctx):
     await ctx.send('https://hbl917070.cf/img/murl/SgsU3cr.jpg')
     if random.randint(1, 10)==1:
         await ctx.send('原來你沒收到封測的邀請嗎？')
-@bot.command()
-async def status(ctx):
-    if sendvalue==0:
-        sendvalue=1
-        await ctx.send("Sending status is open")
-    else:
-        sendvalue==0
-        await ctx.send("Sending status is closed")
 #Error Handler
 @gsat.error
 async def gsaterr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         if gsattime==0:
-            await ctx.send(":x:The time of gsat is not set up yet."+'\n'+"To set up, type `πgsat help`")
+            await ctx.send(":x:The time of GSAT is not set up yet."+'\n'+"To set up, type `πgsat help`")
         else:
-            now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_date))
+            now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
             remaining=gsattime-now
             if remaining==1:
-                await ctx.send("Time remaining: **1 day**")
+                await ctx.send("Time remaining of GSAT: **1 day**")
             elif remaining<=0:
                 await ctx.send("Already happened.")
             else:
-                await ctx.send(f"Time remaining: **{remaining} days**")
+                await ctx.send(f"Time remaining of GSAT: **{remaining} days**")
+@bot.command()#ok
+async def debug(ctx):
+    await ctx.send(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
 bot.loop.create_task(scrape())
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 bot.run(token)
