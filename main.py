@@ -9,7 +9,7 @@ channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
 start = time.time()
-gsattime=0
+TIME=sort=0 #exam
 
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
@@ -88,46 +88,73 @@ async def ping(ctx):
     await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
 @bot.command()#ok
 async def gi(ctx):
-    guild = ctx.guild
+    #guild = ctx.guild
     embed = discord.Embed(title='The bot is still under development',description="Coded by @flyingcatt3#2016",timestamp=ctx.message.created_at,color=discord.Color.red())
     embed.add_field(name="功能不斷增加中",value='ver 1.2')
     await ctx.send(embed=embed)
 @bot.command()
-async def gsat(ctx,date):
-    now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+async def exam(ctx,date):
+    err=":x:Format error."+"'\n'"+"For help, type `πexam help`"
     if date == 'help':
-        await ctx.send('e.g. πgsat 20221106')
-    if date.isdigit() and len(date)==8:
-        if int(date) >= now:
-            await ctx.send(':white_check_mark:Set up Succeedfully.')
-            gsattime=int(date)
-        elif int(date) == now:
-            await ctx.send(':x:The date you specified is today.')
+        await ctx.send('e.g. πexam 公測-20221106')
+    elif date == 'reset':
+        await ctx.send(':white_check_mark:Reset successfully.')
+        time=0
+    elif date.find('-')!=-1:
+        if date.find('-')==date.rfind('-'):
+            date.split('-')
+            if date[-1].isdigit() and len(date[-1])==8 and date[0]!='':
+                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+                if int(date) >= now:
+                    await ctx.send(':white_check_mark:Set up successfully.')
+                    TIME=int(date[-1])
+                    sort=date[0]
+                elif int(date[-1]) == now:
+                    await ctx.send(':x:The date you specified is today.')
+            else:
+                await ctx.send(err)
         else:
-            await ctx.send(":x:Format error."+"'\n'"+"For help, type `πgsat help`")
+            await ctx.send(err)
+    else:
+        await ctx.send(err)
 @bot.command()#ok
 async def starburst(ctx):
     await ctx.send('https://hbl917070.cf/img/murl/SgsU3cr.jpg')
     if random.randint(1, 10)==1:
         await ctx.send('原來你沒收到封測的邀請嗎？')
 #Error Handler
-@gsat.error
-async def gsaterr(ctx,err):
+@exam.error
+async def examerr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
-        if gsattime==0:
-            await ctx.send(":x:The time of GSAT is not set up yet."+'\n'+"To set up, type `πgsat help`")
+        if time==0:
+            await ctx.send(":x:The time of exam is not set up yet."+'\n'+"To set up, type `πexam help`")
         else:
             now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-            remaining=gsattime-now
+            remaining=TIME-now
             if remaining==1:
-                await ctx.send("Time remaining of GSAT: **1 day**")
+                await ctx.send(f"Time remaining of the **{sort}**: **1 day**")
             elif remaining<=0:
                 await ctx.send("Already happened.")
             else:
-                await ctx.send(f"Time remaining of GSAT: **{remaining} days**")
+                await ctx.send(f"Time remaining of the **{sort}**: **{remaining} days**")
 @bot.command()#ok
 async def debug(ctx):
+    
     await ctx.send(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+
+async def countdown():
+    
+    while 1:
+        day=time.localtime().tm_mday
+        while time!=0:
+            if time.localtime().tm_mday!=day:
+                day=time.localtime().tm_mday
+                now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+                remaining=TIME-now
+                await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
+                await asyncio.sleep(60)
+        await asyncio.sleep(60)
 bot.loop.create_task(scrape())
+bot.loop.create_task(countdown())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
