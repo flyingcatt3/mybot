@@ -1,4 +1,4 @@
-import asyncio,logging,traceback,discord,time,random,math
+import asyncio,logging,traceback,discord,time,datetime,random,math
 from discord.ext import commands,tasks
 from facebook_scraper import get_posts
 
@@ -90,7 +90,7 @@ async def gi(ctx):
 @bot.command()
 async def exam(ctx,date):
     global TIME,sort
-    err=":x:Format error."+"'\n'"+"For help, type `πexam help`"
+    err=":x:Format error."+"'\n'"+"For help, type `.exam help`"
     if date == 'help':
         await ctx.send('e.g. ``.exam 公測-20221106``')
     elif date == 'reset':
@@ -135,7 +135,8 @@ async def examerr(ctx,err):
                 now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
             else:
                 now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-            remaining=TIME-now
+            #remaining=TIME-now
+            remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-datetime.datetime.strptime(str(now), "%Y%m%d")).days
             if remaining==1:
                 await ctx.send(f"Time remaining of the **{sort}**: **1 day**")
             elif remaining<=0:
@@ -164,7 +165,8 @@ async def countdown():
                 now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday+1))
             else:
                 now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-            remaining=TIME-now
+            #remaining=TIME-now
+            remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-datetime.datetime.strptime(str(now), "%Y%m%d")).days
             await bot.wait_until_ready()
             await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
             await asyncio.sleep(60)
