@@ -100,7 +100,7 @@ async def exam(ctx,date):
             date=date.split('-')
             if date[-1].isdigit() and len(date[-1])==8 and date[0]!='':
                 now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
-                if int(date) >= now:
+                if int(date[-1]) >= now:
                     await ctx.send(':white_check_mark:Set up successfully.')
                     TIME=int(date[-1])
                     sort=date[0]
