@@ -91,15 +91,16 @@ async def gi(ctx):
 async def exam(ctx,date):
     err=":x:Format error."+"'\n'"+"For help, type `πexam help`"
     if date == 'help':
-        await ctx.send('e.g. πexam 公測-20221106')
+        await ctx.send('e.g. ``.exam 公測-20221106``')
     elif date == 'reset':
         await ctx.send(':white_check_mark:Reset successfully.')
-        time=0
+        TIME=0
     elif date.find('-')!=-1:
         if date.find('-')==date.rfind('-'):
             date=date.split('-')
             if date[-1].isdigit() and len(date[-1])==8 and date[0]!='':
                 now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
+                logging.warning(now)
                 if int(date[-1]) >= now:
                     await ctx.send(':white_check_mark:Set up successfully.')
                     TIME=int(date[-1])
@@ -123,7 +124,7 @@ async def starburst(ctx):
 @exam.error
 async def examerr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
-        if time==0:
+        if TIME==0:
             await ctx.send(":x:The time of exam is not set up yet."+'\n'+"To set up, type `πexam help`")
         else:
             now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
