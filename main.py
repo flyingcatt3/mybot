@@ -68,13 +68,14 @@ async def scrape():
                         await bot.get_channel(channel1).send(s6+'\n')
                         await bot.get_channel(channel1).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
                 await bot.get_channel(channel1).send(str(j))
+
         except Exception:
             err=':x:**[ERROR]**```\n'+traceback.format_exc()+'\n```\n'+'To debug, visit https://app.kintohub.com/app/environment/5fd51313ebd88626fb287d51/services/mybot/manage/console'
             await bot.get_channel(channel1).send(err)
             pass
-        if i==1:
-            day=time.localtime().tm_mday
-        elif time.localtime().tm_mday!=day:
+        
+        now=datetime.datetime.now()
+        if now.hour == 16 and now.minute < 6:
             await bot.get_channel(channel1).send(f'New: {j}\nCheck: {i}')
         await asyncio.sleep(300)
 
