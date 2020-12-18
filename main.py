@@ -153,7 +153,10 @@ async def debug(ctx):
 @tasks.loop(seconds=60)
 async def countdown():
     global TIME,sort
-    day=time.localtime().tm_mday
+    if time.localtime().tm_hour >= 16:
+        day=time.localtime().tm_mday
+    else:
+        day=time.localtime().tm_mday+1
     while TIME!=0:
         if time.localtime().tm_mday!=day:
             day=time.localtime().tm_mday
