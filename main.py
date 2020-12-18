@@ -3,7 +3,7 @@ from discord.ext import commands,tasks
 from facebook_scraper import get_posts
 
 #setup
-bot=commands.Bot(command_prefix='π')
+bot=commands.Bot(command_prefix='.')
 token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
 channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
@@ -97,7 +97,7 @@ async def exam(ctx,date):
         time=0
     elif date.find('-')!=-1:
         if date.find('-')==date.rfind('-'):
-            date.split('-')
+            date=date.split('-')
             if date[-1].isdigit() and len(date[-1])==8 and date[0]!='':
                 now=int(str(time.localtime().tm_year)+str(time.localtime().tm_mon)+str(time.localtime().tm_mday))
                 if int(date) >= now:
@@ -106,6 +106,8 @@ async def exam(ctx,date):
                     sort=date[0]
                 elif int(date[-1]) == now:
                     await ctx.send(':x:The date you specified is today.')
+                else:
+                    await ctx.send(':x:The date you specified is the past.')
             else:
                 await ctx.send(err)
         else:
@@ -148,6 +150,6 @@ async def countdown():
             await bot.wait_until_ready()
             await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
             await asyncio.sleep(60)
-bot.loop.create_task(scrape())
+#xbot.loop.create_task(scrape())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
