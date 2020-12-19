@@ -82,7 +82,7 @@ async def scrape():
 async def ping(ctx):
     await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
 #@bot.event
-async def on_message(msg):
+#async def chon_message(msg):
     if msg.content.find('782305505842036806'):
         embed = discord.Embed(title='The bot is still under development',description="Coded and owned by <@!366492389063393281>",timestamp=msg.created_at,color=discord.Color.red())
         embed.add_field(name="功能不斷增加中",value='ver 1.2')
