@@ -158,6 +158,6 @@ async def countdown():
 async def forcestop(ctx):
     await ctx.send("Stopped.")
     await bot.logout()
-#bot.loop.create_task(scrape())
+bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
