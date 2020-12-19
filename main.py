@@ -81,13 +81,13 @@ async def scrape():
 @bot.command()#ok
 async def ping(ctx):
     await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
-#@bot.event
-#async def chon_message(msg):
-    #if msg.content.find('782305505842036806'):
-       # embed = discord.Embed(title='The bot is still under development',description="Coded and owned by <@!366492389063393281>",timestamp=msg.created_at,color=discord.Color.red())
-        #embed.add_field(name="功能不斷增加中",value='ver 1.2')
-        #await msg.channel.send(embed=embed)
-@bot.command()
+@bot.event#ok
+async def on_message(msg):
+    if not msg.content.find('782305505842036806'):
+        embed = discord.Embed(title='The bot is still under development',description="Coded and owned by <@!366492389063393281>",timestamp=msg.created_at,color=discord.Color.red())
+        embed.add_field(name="功能不斷增加中",value='ver 1.2')
+        await msg.channel.send(embed=embed)
+@bot.command()#ok
 async def exam(ctx,date):
     global TIME,sort
     err=":x:Format error."+"'\n'"+"For help, type `.exam help`"
@@ -125,7 +125,7 @@ async def starburst(ctx):
     if random.randint(1, 10)==1:
         await ctx.send('原來你沒收到封測的邀請嗎？')
 #Error Handler
-@exam.error
+@exam.error#ok
 async def examerr(ctx,err):
     global TIME,sort
     if isinstance(err,commands.errors.MissingRequiredArgument):
@@ -154,6 +154,10 @@ async def countdown():
         remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-now).days-1
         await bot.wait_until_ready()
         await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
+@bot.command()
+async def forcestop(ctx):
+    await ctx.send("Stopped.")
+    await bot.logout()
 #bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
