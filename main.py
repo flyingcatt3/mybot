@@ -81,11 +81,12 @@ async def scrape():
 @bot.command()#ok
 async def ping(ctx):
     await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
-@bot.command()#ok
-async def help(ctx):
-    embed = discord.Embed(title='The bot is still under development',description=f"Coded and owned by {ctx.guild.owner}",timestamp=ctx.message.created_at,color=discord.Color.red())
-    embed.add_field(name="功能不斷增加中",value='ver 1.2')
-    await ctx.send(embed=embed)
+@bot.event
+async def on_message(msg):
+    if msg.content.find('782305505842036806'):
+        embed = discord.Embed(title='The bot is still under development',description="Coded and owned by <@!366492389063393281>",timestamp=msg.created_at,color=discord.Color.red())
+        embed.add_field(name="功能不斷增加中",value='ver 1.2')
+        await msg.channel.send(embed=embed)
 @bot.command()
 async def exam(ctx,date):
     global TIME,sort
