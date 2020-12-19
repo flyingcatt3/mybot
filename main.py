@@ -83,8 +83,7 @@ async def ping(ctx):
     await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
 @bot.command()#ok
 async def gi(ctx):
-    #guild = ctx.guild
-    embed = discord.Embed(title='The bot is still under development',description="Coded by @flyingcatt3#2016",timestamp=ctx.message.created_at,color=discord.Color.red())
+    embed = discord.Embed(title='The bot is still under development',description=f"Coded and owned by {ctx.guild.owner}",timestamp=ctx.message.created_at,color=discord.Color.red())
     embed.add_field(name="功能不斷增加中",value='ver 1.2')
     await ctx.send(embed=embed)
 @bot.command()
