@@ -81,7 +81,7 @@ async def scrape():
 @bot.command()#ok
 async def ping(ctx):
     await ctx.send(':ping_pong:  '+str(round(1000*bot.latency)))
-@bot.event
+#@bot.event
 async def on_message(msg):
     if msg.content.find('782305505842036806'):
         embed = discord.Embed(title='The bot is still under development',description="Coded and owned by <@!366492389063393281>",timestamp=msg.created_at,color=discord.Color.red())
@@ -154,6 +154,6 @@ async def countdown():
         remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-now).days-1
         await bot.wait_until_ready()
         await bot.get_channel(614352743791984643).send(f":warning:Time remaining of the **{sort}**: **{remaining} days**")
-bot.loop.create_task(scrape())
+#bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.WARNING)
 bot.run(token)
