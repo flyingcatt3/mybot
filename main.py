@@ -23,7 +23,7 @@ err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 #@scrape_setup()
 help_scrape_setup=':information_source: 這是設定爬蟲的指令！'+'P.S. 不包含置頂貼文'+'\n'+'usage: ``.scrape_setup 平臺名稱,目標名稱,頻道ID``'+'\n'+'若``頻道ID``沒有指定，則會以目前你所在的頻道為預設值'+'\n'+'e.g. (1)``.scrape_setup fb,discord``'+'\n'+'e.g. (2)``.scrape_setup fb,discord,頻道ID``'
 err_scrape_setup=":x:Format error."+'\n'+"For help, type `.scrape_setup help`."
-err_scrape_setup_list=':x:Format error.\nusage:``list [正整數]``'
+err_scrape_setup_list=':x:Format error.\nusage:``list[正整數]``'
 
 PASS=':white_check_mark:Set up successfully.'
 tineouterr=':x:**操作逾時**'
