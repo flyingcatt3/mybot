@@ -219,7 +219,7 @@ async def scrape_setup(ctx,arg):
         if arg[-1].isdigit():
             if int(arg[-1])-1 > len(scrape_platform):
                 arg[-1]=len(scrape_platform)+1
-            if int(arg[-1]) > 0 and scrape_platform != []:
+            if int(arg[-1]) > 0 and len(scrape_platform) != 0:
                 N=int(arg[-1])-1
                 a='[平臺]         '+scrape_platform[N]+'\n'
                 b='[目標]         '+scrape_target[N]+'\n'
