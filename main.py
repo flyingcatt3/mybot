@@ -105,9 +105,8 @@ async def scrape():
                     urllist1[m]=new_url1
                     urllist2[m]=new_url2
                     s8=scraper('text',scrape_target[m],n)
-                    s9=scraper('images',scrape_target[m],n)
-                    if s9 == []:    S=s8+'\n'+new_url1
-                    else:   S=s8+'\n'+s9+'\n'+new_url1
+                    s9='\n'.join(scraper('images',scrape_target[m],n))
+                    S=s8+'\n'+s9+'\n'+new_url1
                     await bot.get_channel(int(scrape_ch[m])).send(S)
                 await asyncio.sleep(delay1)
                 m+=1
@@ -279,7 +278,7 @@ async def scrape_setup(ctx,arg):
                         elif int(arg[-1]) != channel1:
                             for x in ctx.guild.channels:
                                 tmp=str(x.id).find(arg[-1])
-                                if tmp!=-1:
+                                if tmp==-1:
                                     await ctx.send(':mag:Checking...')
                                     scraper('time',arg[1],0)
                                     if int(ctx.author.id) != myid:
@@ -295,9 +294,10 @@ async def scrape_setup(ctx,arg):
                                     scrape_target.append(arg[1])
                                     scrape_ch.append(arg[-1])
                                     scrape_creator.append(str(ctx.author))
+                                    tmp=0
                                     await ctx.send(PASS+'\n'+f':information_source:將於稍後於{x.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘**檢查更新')
                                     break
-                        if int(arg[-1]) == channel1:    await ctx.send(':x:此頻道不能被指定，因為其在例外中')
+                        if str(arg[-1]) == str(channel1):    await ctx.send(':x:此頻道不能被指定，因為其在例外中')
                         elif tmp==-1:   await ctx.send(':x:被指定的頻道不存在，或是機器人沒有查看該頻道的權限')
                     except Exception:
                         #await ctx.send(traceback.format_exc())
