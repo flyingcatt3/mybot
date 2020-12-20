@@ -234,13 +234,13 @@ async def scrape_setup(ctx,arg):
                     return i==2 and m.content == ':x:' and m.channel == ctx.channel
                 try:
                     await bot.wait_for('message', timeout=60.0, check=check)
-                    scrape_platform.remove(scrape_platform[N])
-                    scrape_target.remove(scrape_target[N])
-                    scrape_ch.remove(scrape_ch[N])
-                    scrape_creator.remove(scrape_creator[N])
-                    await ctx.send(':white_check_mark:Remove successfully.')
                 except asyncio.TimeoutError:
                     if i!=0:    await ctx.send(tineouterr)
+                scrape_platform.remove(scrape_platform[N])
+                scrape_target.remove(scrape_target[N])
+                scrape_ch.remove(scrape_ch[N])
+                scrape_creator.remove(scrape_creator[N])
+                await ctx.send(':white_check_mark:Remove successfully.')
             elif scrape_platform == []: await ctx.send(':warning:目前沒有任何組態')
             else: await ctx.send(err_scrape_setup_list)
         else: await ctx.send(err_scrape_setup_list)
