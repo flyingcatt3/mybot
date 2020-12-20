@@ -29,7 +29,7 @@ Ctrl + Shift + L 選取相同文字
 .index('fox')     #查詢子字串在字串中出現的索引，若搜尋不到子字串，會回傳ValueError
 .rfind('fox')     #從尾部往前查詢子字串在字串中出現的索引
 .endswith('dog')         #檢查字串尾部的子字串
-linie.startswith('fox')      #檢查字串頭部的子字串
+.startswith('fox')      #檢查字串頭部的子字串
 .replace('brown','red')  #以第2個參數替換子字串
 
 拆分和分割字串
