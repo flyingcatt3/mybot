@@ -279,7 +279,7 @@ async def scrape_setup(ctx,arg):
                         elif int(arg[-1]) != channel1:
                             for x in ctx.guild.channels:
                                 tmp=str(x.id).find(arg[-1])
-                                if tmp==-1:
+                                if tmp!=-1:
                                     await ctx.send(':mag:Checking...')
                                     scraper('time',arg[1],0)
                                     if int(ctx.author.id) != myid:
