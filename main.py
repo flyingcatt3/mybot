@@ -108,6 +108,7 @@ async def scrape():
                     s9='\n'.join(scraper('images',scrape_target[m],n))
                     S=s8+'\n'+s9+'\n'+new_url1
                     await bot.get_channel(int(scrape_ch[m])).send(S)
+                    if s9=='':  await bot.get_channel(channel1).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
                 await asyncio.sleep(delay1)
                 m+=1
         except Exception:
