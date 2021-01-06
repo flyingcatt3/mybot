@@ -320,7 +320,7 @@ async def hulan(ctx,arg):
 async def agt(ctx,arg):
     p=random.randint(0,120)
     a=f"{arg} 有 **{p}%** 的可能去考指考"
-    b=f"騙人的吧 :is_that_a_lie:...{arg} 只有 **{p}%** 的可能去考指考"
+    b="騙人的吧 :is_that_a_lie:"+f"...{arg} 只有 **{p}%** 的可能去考指考"
     link=['http://i8.ae/bsi8w','https://i.imgur.com/qdIqIID.png','http://i8.ae/qdges']
     if p>100:
         await ctx.send('https://i.imgur.com/UUDVTBS.png')
