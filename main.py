@@ -12,7 +12,7 @@ channel1=701153967412871268
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
 TIME=sort=0 #exam
-stop,stoplist=3,[] #forcestop
+stop,stoplist=3,[] #restart
 scrape_platform,scrape_target,scrape_ch,scrape_creator=[],[],[],[] #@scrape_setup()
 delay_choices1 = [5, 10, 15, 20, 25]
 delay_choices2 = [300, 330, 360, 390, 420] #延遲的秒數 #@scrape()
@@ -189,7 +189,7 @@ async def countdown():
         await bot.get_channel(614352743791984643).send(f":warning:Time remaining of **{sort}**: **{remaining} days**")
 
 @bot.command()#ok
-async def forcestop(ctx):
+async def restart(ctx):
     global stop,stoplist
     if int(ctx.author.id) == myid:
         await ctx.send("Stopped.")
@@ -316,6 +316,9 @@ async def scrape_setup(ctx,arg):
 async def hulan(ctx,arg):
     await ctx.send(f'**{arg}**一進dc，所有聊天的人便開始對著他嘲諷，有的叫道，\n「**{arg}**，你的噁男身份組又添上新的了！」\n他不回答，對其他人說，「我不是甲。」便排出我不是噁男幾個字。\n他們又故意的高聲嚷道，「吼 你又好想狠狠的跳起來了！」\n**{arg}**睜大眼睛說，「你怎麼這樣憑空污人清白……」「什麼清白?我前天親眼見你噁人，還裝。」**{arg}**便漲紅了臉，額上的青筋條條綻出，爭辯道，「搭訕的事不能算……人際交流！……欣賞人的事，能算噁麼？」\n接連便是難懂的話，什麼「要是我是妹子」，什麼「我也很喜歡蘿莉」之類，引得眾人都鬨笑起來：群組內充滿了快活的空氣。')
 
+@bot.command()
+async def agt(ctx,arg):
+    await ctx.send(f"{arg} 有 **{random.randint(0,100)}%** 的可能去考指考" )
 @bot.command()#這是最短，最單純，最美麗的function
 async def getchannelid(ctx):
     await ctx.send(ctx.channel.id)
@@ -326,7 +329,7 @@ async def examerr(ctx,err):
     global TIME,sort
     if isinstance(err,commands.errors.MissingRequiredArgument):
         if TIME==0:
-            await ctx.send(":x:The time of exam is not set up yet."+'\n'+"To set up, type `.exam help`")
+            await ctx.send(":x:There's no timer."+'\n'+"To set up, type `.exam help`")
         else:
             now = datetime.datetime.now()
             if now.hour >= 16:
@@ -335,10 +338,10 @@ async def examerr(ctx,err):
                 remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-now).days
             #remaining=TIME-now
             if remaining==1:
-                await ctx.send(f"Time remaining of the **{sort}**: **1 day**")
+                await ctx.send(f"Time remaining of **{sort}**: **1 day**")
             elif remaining<=0: await ctx.send("Already happened.")
             else:
-                await ctx.send(f"Time remaining of the **{sort}**: **{remaining} days**")
+                await ctx.send(f"Time remaining of **{sort}**: **{remaining} days**")
 
 @hulan.error#ok
 async def hulanerr(ctx,err):
