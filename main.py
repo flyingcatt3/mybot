@@ -318,7 +318,19 @@ async def hulan(ctx,arg):
 
 @bot.command()
 async def agt(ctx,arg):
-    await ctx.send(f"{arg} 有 **{random.randint(0,100)}%** 的可能去考指考" )
+    p=random.randint(0,120)
+    a=f"{arg} 有 **{p}%** 的可能去考指考"
+    b=f"騙人的吧:is_that_a_lie:...{arg} 只有 **{p}%** 的可能去考指考"
+    link=['http://i8.ae/bsi8w','https://i.imgur.com/qdIqIID.png','http://i8.ae/qdges']
+    if p>100:
+        await ctx.send('https://i.imgur.com/UUDVTBS.png')
+    elif p>=50:
+        await ctx.send(a)
+        await ctx.send(random.choice(link))
+    elif p<=20:
+        await ctx.send(b)
+    else:
+        await ctx.send(a)
 @bot.command()#這是最短，最單純，最美麗的function
 async def getchannelid(ctx):
     await ctx.send(ctx.channel.id)
