@@ -26,7 +26,7 @@ err_scrape_setup=":x:Format error."+'\n'+"For help, type `.scrape_setup help`."
 err_scrape_setup_list=':x:Format error.\nusage:``list[正整數]``'
 
 PASS=':white_check_mark:Set up successfully.'
-tineouterr=':x:**操作逾時**'
+timeouterr=':x:**操作逾時**'
 
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
@@ -202,7 +202,7 @@ async def restart(ctx):
         await ctx.send(f"還需要其他 **{stop}** 人執行此指令始可強制停止{bot.get_user(782305505842036806).mention}")
         await asyncio.sleep(30)
         if tmp==stop:
-            await ctx.send(tineouterr)
+            await ctx.send(timeouterr)
             stop=3
             stoplist=[]
     elif ctx.author in stoplist: await ctx.send(f'{ctx.author}, 此為無效操作')
@@ -235,12 +235,13 @@ async def scrape_setup(ctx,arg):
                 try:
                     await bot.wait_for('message', timeout=60.0, check=check)
                 except asyncio.TimeoutError:
-                    if i!=0:    await ctx.send(tineouterr)
-                scrape_platform.remove(scrape_platform[N])
-                scrape_target.remove(scrape_target[N])
-                scrape_ch.remove(scrape_ch[N])
-                scrape_creator.remove(scrape_creator[N])
-                await ctx.send(':white_check_mark:Remove successfully.')
+                    if i!=0:    await ctx.send(timeouterr)
+                if i==2:
+                    scrape_platform.remove(scrape_platform[N])
+                    scrape_target.remove(scrape_target[N])
+                    scrape_ch.remove(scrape_ch[N])
+                    scrape_creator.remove(scrape_creator[N])
+                    await ctx.send(':white_check_mark:Remove successfully.')
             elif scrape_platform == []: await ctx.send(':warning:目前沒有任何組態')
             else: await ctx.send(err_scrape_setup_list)
         else: await ctx.send(err_scrape_setup_list)
@@ -267,7 +268,7 @@ async def scrape_setup(ctx,arg):
                                         if i==1:    await ctx.send('還需要 1 人回覆:thumbsup:')
                                         return i==2 and m.content == ':thumbsup:' and m.channel == ctx.channel
                                     try:    await bot.wait_for('message', timeout=60.0, check=check)
-                                    except asyncio.TimeoutError:    await ctx.send(tineouterr)
+                                    except asyncio.TimeoutError:    await ctx.send(timeouterr)
                                 scrape_platform.append('Facebook')
                                 scrape_target.append(arg[1])
                                 scrape_ch.append(str(ctx.channel.id))
@@ -290,7 +291,7 @@ async def scrape_setup(ctx,arg):
                                             if i==1:    await ctx.send('還需要 1 人回覆:thumbsup:')
                                             return i==2 and m.content == ':thumbsup:' and m.channel == ctx.channel
                                         try:    await bot.wait_for('message', timeout=60.0, check=check)
-                                        except asyncio.TimeoutError:    await ctx.send(tineouterr)
+                                        except asyncio.TimeoutError:    await ctx.send(timeouterr)
                                     scrape_platform.append('Facebook')
                                     scrape_target.append(arg[1])
                                     scrape_ch.append(arg[-1])
@@ -331,6 +332,7 @@ async def agt(ctx,arg):
         await ctx.send(b)
     else:
         await ctx.send(a)
+        
 @bot.command()#這是最短，最單純，最美麗的function
 async def getchannelid(ctx):
     await ctx.send(ctx.channel.id)
