@@ -64,7 +64,7 @@ async def gsheet1(ctx,method):
                 scrape_creator.append(G[i])
             i+=1
     elif method=='create':
-        ws.append_table(values=['',now,'',scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]])
+        ws.append_table(values=[['',now,'',scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
     elif ws.get_value(f'A{method+1}')=='':
         await ctx.send(':x:Error 404')
     elif ws.get_value(f'G{method+1}')!=str(ctx.author):
@@ -342,12 +342,17 @@ async def scrape_setup(ctx,arg):
                 if not arg[1] in scrape_target:
                     try:#scraper('time',arg[1],0)
                         tmp=-1
-                        async def create(x):
+                        async def create(ctx,arg):
                             scrape_platform.append('Facebook')
                             scrape_target.append(arg[1])
-                            scrape_ch.append(str(ctx.channel.id))
-                            scrape_creator.append(str(ctx.author))
-                            await ctx.send(PASS+'\n'+f':information_source:將於稍後於{x.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
+                            if comma2_isnotexist or arg[-1] == '':
+                                scrape_ch.append(str(ctx.channel.id))
+                                scrape_creator.append(str(ctx.author))
+                                await ctx.send(PASS+'\n'+f':information_source:將於稍後於{ctx.channel.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
+                            else:
+                                scrape_ch.append(str(arg.id))
+                                scrape_creator.append(str(ctx.author))
+                                await ctx.send(PASS+'\n'+f':information_source:將於稍後於{arg.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
                             gsheet1(0,'create')
                         if comma2_isnotexist or arg[-1] == '':
                             if int(ctx.channel.id) != channel1:
@@ -365,10 +370,10 @@ async def scrape_setup(ctx,arg):
                                     except asyncio.TimeoutError:
                                         await ctx.send(timeouterr)
                                     if i==2:
-                                        create(ctx.channel)
+                                        create(ctx,0)
                                         tmp=0
                                 else:
-                                    create(ctx.channel)
+                                    create(ctx,0)
                                     tmp=0
                             else:
                                 await ctx.send(':x:此頻道不能被指定，因為其在例外中')
@@ -390,10 +395,10 @@ async def scrape_setup(ctx,arg):
                                         except asyncio.TimeoutError:
                                             await ctx.send(timeouterr)
                                         if i==2:
-                                            create(x)
+                                            create(ctx,x)
                                             tmp=0
                                     else:
-                                        create(x)
+                                        create(ctx,x)
                                         tmp=0
                                     break
                         if str(arg[-1]) == str(channel1):    await ctx.send(':x:此頻道不能被指定，因為其在例外中')
