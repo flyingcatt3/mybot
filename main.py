@@ -14,7 +14,7 @@ intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
 TIME=sort=0 #exam
 stop,stoplist=3,[] #restart
-scrape_platform,scrape_target,scrape_ch,scrape_creator,scrape_note=[],[],[],[],[] #@scrape_setup()
+scrape_platform,scrape_target,scrape_ch,scrape_creator=[],[],[],[] #@scrape_setup()
 delay_choices1 = [5, 10, 15, 20, 25]
 delay_choices2 = [300, 330, 360, 390, 420] #延遲的秒數 #@scrape()
 
