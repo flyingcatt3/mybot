@@ -39,7 +39,7 @@ async def gsheet1(ctx,method):
     global sh,scrape_platform,scrape_target,scrape_ch,scrape_creator
     ws = sh.worksheet_by_title('爬蟲組態')
     now = time.strftime("%Y-%m-%d %I:%M:%S", time.localtime())
-    def check(m):
+    async def check(m):
         if m=='是':
             ws.update_value(f'C{tmp}',now)
             await ctx.send(':white_check_mark:Removed.')
@@ -244,7 +244,7 @@ async def on_message(msg):
     for x in msg.mentions:
         if int(x.id)==botid and int(msg.author.id)!=botid:
             embed = discord.Embed(title='The bot is still under development',description=f"Coded and owned by <@!{myid}>",timestamp=msg.created_at,color=discord.Color.red())
-            embed.add_field(name="功能不斷增加中",value='ver 1.2.1')
+            embed.add_field(name="功能不斷增加中",value='ver 20210110')
             await msg.channel.send(embed=embed)
             break
         #await msg.channel.send(x)
@@ -337,7 +337,7 @@ async def scrape_setup(ctx,arg):
                 if not arg[1] in scrape_target:
                     try:#scraper('time',arg[1],0)
                         tmp=-1
-                        def create(x):
+                        async def create(x):
                             scrape_platform.append('Facebook')
                             scrape_target.append(arg[1])
                             scrape_ch.append(str(ctx.channel.id))
