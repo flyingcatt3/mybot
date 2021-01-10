@@ -112,11 +112,11 @@ def gsheet3(a,b):
     if ws.get_value(f'B{i}')=='':
         ws.update_value(f'B{i}',a)
     else:
-        ws.update_value(f'B{i}',int(ws.getvalue(f'B{i}'))+a)
+        ws.update_value(f'B{i}',int(ws.get_value(f'B{i}'))+a)
     if ws.get_value(f'C{i}')=='':
         ws.update_value(f'C{i}',b)
     else:
-        ws.update_value(f'C{i}',int(ws.getvalue(f'C{i}'))+b)
+        ws.update_value(f'C{i}',int(ws.get_value(f'C{i}'))+b)
     now=datetime.datetime.now()
     if now.hour == 16 and now.minute < 6:
         ws.update_value(f'A{i}',time.strftime("%Y-%m-%d", time.localtime()))
