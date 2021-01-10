@@ -55,7 +55,7 @@ async def gsheet1(ctx,method):
         G=' '.join(ws.get_values(start=(2,7), end=(101,7))[0]).split()
         i=0
         while i<100:
-            if D[i]=='':
+            if i==len(D):
                 break
             else:
                 scrape_platform.append(D[i])
@@ -91,7 +91,7 @@ def gsheet2(url,row):
         url=' '.join(ws.get_values(start=(1,1), end=(103,1))[0]).split()
         i=0
         while i<103:
-            if url[i]=='':
+            if i==len(url):
                 break
             else:
                 urllist.append(url[i])
