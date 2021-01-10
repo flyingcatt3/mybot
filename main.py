@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import asyncio,logging,traceback,discord,time,datetime,random,math
+import asyncio,logging,traceback,discord,time,datetime,random,math,pygsheets
 from discord.ext import commands,tasks
 from facebook_scraper import get_posts
 
@@ -9,11 +9,12 @@ botid=782305505842036806
 myid=366492389063393281
 token='NzgyMzA1NTA1ODQyMDM2ODA2.X8KQxw.dhE5IUJNwwFI-xrGpONoRjUCcj8'
 channel1=701153967412871268
+channel2=617284939053793298
 intents = discord.Intents(messages=True, guilds=True, members=True)
 discord.MemberCacheFlags(online=True)
 TIME=sort=0 #exam
 stop,stoplist=3,[] #restart
-scrape_platform,scrape_target,scrape_ch,scrape_creator=[],[],[],[] #@scrape_setup()
+scrape_platform,scrape_target,scrape_ch,scrape_creator,scrape_note=[],[],[],[],[] #@scrape_setup()
 delay_choices1 = [5, 10, 15, 20, 25]
 delay_choices2 = [300, 330, 360, 390, 420] #延遲的秒數 #@scrape()
 
@@ -23,11 +24,103 @@ err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 #@scrape_setup()
 help_scrape_setup=':information_source: 這是設定爬蟲的指令！'+'P.S. 不包含置頂貼文'+'\n'+'usage: ``.scrape_setup 平臺名稱,目標名稱,頻道ID``'+'\n'+'若``頻道ID``沒有指定，則會以目前你所在的頻道為預設值'+'\n'+'e.g. (1)``.scrape_setup fb,discord``'+'\n'+'e.g. (2)``.scrape_setup fb,discord,頻道ID``'
 err_scrape_setup=":x:Format error."+'\n'+"For help, type `.scrape_setup help`."
-err_scrape_setup_list=':x:Format error.\nusage:``list[正整數]``'
+err_scrape_setup_remove=':x:Format error.\nusage:``remove[設定編號]``'
+err_scrape_setup_note=':x:Format error.\nusage:``note[設定編號]``'
+
+urllist=[]
 
 PASS=':white_check_mark:Set up successfully.'
 timeouterr=':x:**操作逾時**'
 
+gc = pygsheets.authorize(service_account_file='./credentials.json')
+sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ')
+
+async def gsheet1(ctx,method):
+    global sh,scrape_platform,scrape_target,scrape_ch,scrape_creator
+    ws = sh.worksheet_by_title('爬蟲組態')
+    now = time.strftime("%Y-%m-%d %I:%M:%S", time.localtime())
+    def check(m):
+        if m=='是':
+            ws.update_value(f'C{tmp}',now)
+            await ctx.send(':white_check_mark:Removed.')
+            return 1
+        elif method.startswith('note'):
+            ws.update_value(f'H{tmp}',m)
+            await ctx.send(':white_check_mark:The note is added.')
+            return 1
+    if method=='fetch':
+        D=' '.join(ws.get_values(start=(2,4), end=(101,4))[0]).split()
+        E=' '.join(ws.get_values(start=(2,5), end=(101,5))[0]).split()
+        F=' '.join(ws.get_values(start=(2,6), end=(101,6))[0]).split()
+        G=' '.join(ws.get_values(start=(2,7), end=(101,7))[0]).split()
+        i=0
+        while i<100:
+            if D[i]=='':
+                break
+            else:
+                scrape_platform.append(D[i])
+                scrape_target.append(E[i])
+                scrape_ch.append(F[i])
+                scrape_creator.append(G[i])
+            i+=1
+    elif method=='create':
+        ws.append_table(values=['',now,'',scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]])
+    elif ws.get_value(f'A{method+1}')=='':
+        await ctx.send(':x:Error 404')
+    elif ws.get_value(f'G{method+1}')!=str(ctx.author):
+        await ctx.send(':x:只有創建者才能進行操作')    
+    elif method.startswith('note'):
+        tmp=int(method.strip('note'))+1
+        await ctx.send('請輸入備註:')
+        try:
+            await bot.wait_for('message', timeout=60.0, check=check)
+        except asyncio.TimeoutError:
+            await ctx.send(timeouterr)
+    else:
+        tmp=int(method.strip('remove'))+1
+        await ctx.send(f":warning:確定要刪除編號 **{method}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
+        try:
+            await bot.wait_for('message', timeout=60.0, check=check)
+        except asyncio.TimeoutError:
+            await ctx.send(timeouterr)
+
+def gsheet2(url,row):
+    global sh,urllist
+    ws = sh.worksheet_by_title('URL')
+    if url=='fetch':
+        url=' '.join(ws.get_values(start=(1,1), end=(103,1))[0]).split()
+        i=0
+        while i<103:
+            if url[i]=='':
+                break
+            else:
+                urllist.append(url[i])
+            i+=1
+    else:
+        ws.update_value(f'A{row}',url)
+
+def gsheet3(a,b):
+    global sh
+    ws = sh.worksheet_by_title('Cycle')
+    i=2
+    while 1:
+        if ws.get_value(f'A{i}').isdigit() or ws.get_value(f'A{i}')=='':
+            break
+        else:
+            i+=1
+    ws.update_value(f'A{i}',datetime.datetime.now().hour+8)
+    if ws.getvalue(f'B{i}')=='':
+        ws.update_value(f'B{i}',a)
+    else:
+        ws.update_value(f'B{i}',int(ws.getvalue(f'B{i}'))+a)
+    if ws.getvalue(f'C{i}')=='':
+        ws.update_value(f'C{i}',b)
+    else:
+        ws.update_value(f'C{i}',int(ws.getvalue(f'C{i}'))+b)
+    now=datetime.datetime.now()
+    if now.hour == 16 and now.minute < 6:
+        ws.update_value(f'A{i}',time.strftime("%Y-%m-%d", time.localtime()))
+    
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
 
@@ -37,37 +130,55 @@ async def scrape():
 
     #define
     
-    i=j=oldurl_LEA=oldurl_gw=oldurl_qmo=0
-    urllist1=['']*100
-    urllist2=['']*100
+    oldurl_LEA=oldurl_gw=oldurl_qmo=0
+    global urllist,scrape_target,scrape_ch
+    toplist=[]
+    warn=':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'
 
     while 1:
+        m=x=0
+        if urllist==[]:
+            gsheet1(0,'fetch')
+            gsheet2('fetch',0)
+
         try:
             newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
         
             #s135=text,s246=url,s7=images
             if newurl_LEA!=oldurl_LEA and newurl_LEA!=None:
+                urllist[m]=newurl_LEA
+                gsheet2(newurl_LEA,1)
                 s1=scraper('text','LearningEnglishAmericanWay',-1)
                 oldurl_LEA=s2=newurl_LEA
+                x+=1
+                m+=1
             else:
                 s1=s2='0'
+            await asyncio.sleep(random.choice(delay_choices1))
 
             newurl_gw=scraper('post_url','gainwind',-1)
             if newurl_gw!=oldurl_gw and newurl_gw!=None:
+                urllist[m]=newurl_gw
+                gsheet2(newurl_gw,2)
                 s3=scraper('text','gainwind',-1)
                 oldurl_gw=s4=newurl_gw
+                x+=1
+                m+=1
             else:
                 s3=s4='0'
+            await asyncio.sleep(random.choice(delay_choices1))
 
             newurl_qmo=scraper('post_url','qmoleenglish',0)
-            if newurl_qmo!=oldurl_qmo:
+            if newurl_qmo!=oldurl_qmo and newurl_qmo!=None:
+                urllist.append(newurl_qmo)
+                gsheet2(newurl_qmo,3)
                 s5=("".join('\n'.join(scraper('text','qmoleenglish',0)).split('#')[0])).replace('\n\n','$').replace('\n','').replace('$','\n')
                 s7='\n'.join(scraper('images','qmoleenglish',0))
                 oldurl_qmo=s6=newurl_qmo
+                x+=1
+                m+=1
             else:
                 s5=s6=s7='0'
-
-            i+=1
 
             if s1!=s2 and s3!=s4:
                 s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
@@ -78,49 +189,50 @@ async def scrape():
             else:
                 s=0
             if s!=0 or s5!='0':
-                j+=1
+                x+=1
                 if s!=0:
-                    await bot.get_channel(channel1).send(s+'\n')
+                    await bot.get_channel(channel1).send(s)
                 if s5!='0':
-                    await bot.get_channel(channel1).send(s5+'\n')
+                    await bot.get_channel(channel1).send(s5)
                     if s7!='0':
-                        await bot.get_channel(channel1).send(s7+'\n')
-                        await bot.get_channel(channel1).send(s6+'\n')
-                        await bot.get_channel(channel1).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
-                #await bot.get_channel(channel1).send(str(j))
-            m=0
-            delay1 = random.choice(delay_choices1)  #隨機選取秒數
-            while m<len(scrape_platform):
-                new_url1=scraper('post_url',scrape_target[m],-1)
-                new_url2=scraper('post_url',scrape_target[m],0)
-                if new_url1!=urllist1[m] and new_url1!=None:
-                    n=-1
-                    if urllist2[m]!=new_url2 and urllist1[m]!='':
-                        s8=scraper('text',scrape_target[m],n)
-                        s9=scraper('images',scrape_target[m],n)
-                        n=0
-                        if s9 == []:    S=s8+'\n'+new_url1
-                        else:   S=s8+'\n'+s9+'\n'+new_url1
-                        await bot.get_channel(int(scrape_ch[m])).send(S)
-                    urllist1[m]=new_url1
-                    urllist2[m]=new_url2
-                    s8=scraper('text',scrape_target[m],n)
-                    s9='\n'.join(scraper('images',scrape_target[m],n))
-                    S=s8+'\n'+s9+'\n'+new_url1
+                        await bot.get_channel(channel1).send(s7)
+                        await bot.get_channel(channel1).send(s6)
+                        await bot.get_channel(channel1).send(warn)
+            m=3
+            await asyncio.sleep(random.choice(delay_choices1))
+
+            while m<len(scrape_platform)+3:
+                if m == len(urllist):
+                    urllist.append(0)
+                if toplist == []:
+                    if (scraper('time',scrape_target[m],0)-datetime.datetime.now()).days>=7:
+                        toplist.append(-1)
+                    else:
+                        toplist.append(0)
+                newurl=scraper('post_url',scrape_target[m],toplist[m])
+                if newurl!=urllist[m] and newurl!=None:
+                    gsheet2(newurl,m+3)
+                    urllist[m]=newurl
+                    text=scraper('text',scrape_target[m],toplist[m])
+                    images=scraper('images',scrape_target[m],toplist[m])
+                    S=text+'\n'+newurl
                     await bot.get_channel(int(scrape_ch[m])).send(S)
-                    if s9=='':  await bot.get_channel(channel1).send(':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'+'\n')
-                await asyncio.sleep(delay1)
+                    if images != []:
+                        images='\n'.join(images)
+                        await bot.get_channel(int(scrape_ch[m])).send(images)
+                        await bot.get_channel(int(scrape_ch[m])).send(warn)
+                    await asyncio.sleep(random.choice(delay_choices1))
+                x+=1
                 m+=1
         except Exception:
             err=':x:**[ERROR]**```\n'+traceback.format_exc()+'\n```\n'+'To debug, visit https://app.kintohub.com/app/environment/5fd51313ebd88626fb287d51/services/mybot/manage/console'
             await bot.get_channel(channel1).send(err)
             pass
-        
-        now=datetime.datetime.now()
-        if now.hour == 16 and now.minute < 6:
-            await bot.get_channel(channel1).send(f'New: {j}\nCheck: {i}')
+
+        gsheet3(1,x)
+
         delay2 = random.choice(delay_choices2)  #隨機選取秒數
-        await asyncio.sleep(delay2-m*delay1)
+        await asyncio.sleep(delay2/(m/10+1))
 
 @bot.command()#ok
 async def ping(ctx):
@@ -176,18 +288,6 @@ async def starburst(ctx):
     if random.randint(1, 10)==1:
         await ctx.send('原來你沒收到封測的邀請嗎？')
 
-
-
-@tasks.loop(seconds=60)
-async def countdown():
-    global TIME,sort
-    now=datetime.datetime.now()
-    if now.hour == 16 and now.minute <= 1 and TIME!=0:
-        #remaining=TIME-now
-        remaining=(datetime.datetime.strptime(str(TIME), "%Y%m%d")-now).days-1
-        await bot.wait_until_ready()
-        await bot.get_channel(614352743791984643).send(f":warning:Time remaining of **{sort}**: **{remaining} days**")
-
 @bot.command()#ok
 async def restart(ctx):
     global stop,stoplist
@@ -212,40 +312,21 @@ async def restart(ctx):
 
 @bot.command()
 async def scrape_setup(ctx,arg):
-    global scrape_platform,scrape_target,scrape_ch,err_scrape_setup,err_scrape_setup_list,help_scrape_setup
+    global scrape_platform,scrape_target,scrape_ch,err_scrape_setup,help_scrape_setup
     if arg == 'help':
         await ctx.send(help_scrape_setup)
-    elif arg.startswith('list'):
-        if arg[-1].isdigit():
-            if int(arg[-1])-1 > len(scrape_platform):
-                arg[-1]=len(scrape_platform)+1
-            if int(arg[-1]) > 0 and scrape_platform != []:
-                N=int(arg[-1])-1
-                a='[平臺]         '+scrape_platform[N]+'\n'
-                b='[目標]         '+scrape_target[N]+'\n'
-                c='[頻道ID]     '+scrape_ch[N]+'\n'
-                d='[創建者]     '+scrape_creator[N]
-                await ctx.send(':information_source: **爬蟲組態列表**'+'\n'+a+b+c+d+'\n:information_source:若要刪除此組態，請輸入:x:')
-                i=0
-                async def check(m):
-                    if int(ctx.author.id) == myid: return 1
-                    i+=1
-                    if i==1:    await ctx.send('還需要 1 人回覆:x:')
-                    return i==2 and m.content == ':x:' and m.channel == ctx.channel
-                try:
-                    await bot.wait_for('message', timeout=60.0, check=check)
-                except asyncio.TimeoutError:
-                    if i!=0:    await ctx.send(timeouterr)
-                if i==2:
-                    scrape_platform.remove(scrape_platform[N])
-                    scrape_target.remove(scrape_target[N])
-                    scrape_ch.remove(scrape_ch[N])
-                    scrape_creator.remove(scrape_creator[N])
-                    await ctx.send(':white_check_mark:Remove successfully.')
-            elif scrape_platform == []: await ctx.send(':warning:目前沒有任何組態')
-            else: await ctx.send(err_scrape_setup_list)
-        else: await ctx.send(err_scrape_setup_list)
-    elif len(scrape_platform)>100:  await ctx.send(':x:')
+    elif arg == 'list':
+        await ctx.send(':information_source:**爬蟲組態** https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ')
+    elif arg.startswith('remove'):
+        if arg.strip('remove').isdigit():
+            gsheet1(ctx,arg)
+        else:
+            await ctx.send(err_scrape_setup_remove)
+    elif arg.startswith('note'):
+        if arg.strip('note').isdigit():
+            gsheet1(ctx,arg)
+        else:
+            await ctx.send(err_scrape_setup_note)
     elif arg.find(',')!=-1:
         comma2_isnotexist= arg.find(',') == arg.rfind(',')
         arg=arg.split(',')
@@ -254,27 +335,34 @@ async def scrape_setup(ctx,arg):
                 await ctx.send(err_scrape_setup)
             else:
                 if not arg[1] in scrape_target:
-                    try:
+                    try:#scraper('time',arg[1],0)
                         tmp=-1
+                        def create(x):
+                            scrape_platform.append('Facebook')
+                            scrape_target.append(arg[1])
+                            scrape_ch.append(str(ctx.channel.id))
+                            scrape_creator.append(str(ctx.author))
+                            await ctx.send(PASS+'\n'+f':information_source:將於稍後於{x.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
+                            gsheet1(0,'create')
                         if comma2_isnotexist or arg[-1] == '':
                             if int(ctx.channel.id) != channel1:
                                 await ctx.send(':mag:Checking...')
-                                scraper('time',arg[1],0)
                                 if int(ctx.author.id) != myid:
                                     await ctx.send(f'目標為  https://www.facebook.com/{arg[1]}/\n:warning:需要其他 2 人回覆:thumbsup:始可設定成功')
+                                    i=0
                                     async def check(m):
-                                        i=0
                                         i+=1
                                         if i==1:    await ctx.send('還需要 1 人回覆:thumbsup:')
                                         return i==2 and m.content == ':thumbsup:' and m.channel == ctx.channel
-                                    try:    await bot.wait_for('message', timeout=60.0, check=check)
-                                    except asyncio.TimeoutError:    await ctx.send(timeouterr)
-                                scrape_platform.append('Facebook')
-                                scrape_target.append(arg[1])
-                                scrape_ch.append(str(ctx.channel.id))
-                                scrape_creator.append(str(ctx.author))
-                                await ctx.send(PASS+'\n'+f':information_source:將於稍後於{ctx.channel.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
-                                tmp=0
+                                    try:
+                                        await bot.wait_for('message', timeout=60.0, check=check)
+                                    except asyncio.TimeoutError:
+                                        await ctx.send(timeouterr)
+                                    if i==2:
+                                        create(ctx.channel)
+                                        tmp=0
+                                else:
+                                    create(ctx.channel)
                             else:
                                 await ctx.send(':x:此頻道不能被指定，因為其在例外中')
                         elif int(arg[-1]) != channel1:
@@ -290,14 +378,16 @@ async def scrape_setup(ctx,arg):
                                             i+=1
                                             if i==1:    await ctx.send('還需要 1 人回覆:thumbsup:')
                                             return i==2 and m.content == ':thumbsup:' and m.channel == ctx.channel
-                                        try:    await bot.wait_for('message', timeout=60.0, check=check)
-                                        except asyncio.TimeoutError:    await ctx.send(timeouterr)
-                                    scrape_platform.append('Facebook')
-                                    scrape_target.append(arg[1])
-                                    scrape_ch.append(arg[-1])
-                                    scrape_creator.append(str(ctx.author))
-                                    tmp=0
-                                    await ctx.send(PASS+'\n'+f':information_source:將於稍後於{x.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘**檢查更新')
+                                        try:
+                                            await bot.wait_for('message', timeout=60.0, check=check)
+                                        except asyncio.TimeoutError:
+                                            await ctx.send(timeouterr)
+                                        if i==2:
+                                            create(x)
+                                            tmp=0
+                                    else:
+                                        create(x)
+                                        tmp=0
                                     break
                         if str(arg[-1]) == str(channel1):    await ctx.send(':x:此頻道不能被指定，因為其在例外中')
                         elif tmp==-1:   await ctx.send(':x:被指定的頻道不存在，或是機器人沒有查看該頻道的權限')
@@ -317,7 +407,7 @@ async def scrape_setup(ctx,arg):
 async def hulan(ctx,arg):
     await ctx.send(f'**{arg}**一進dc，所有聊天的人便開始對著他嘲諷，有的叫道，\n「**{arg}**，你的噁男身份組又添上新的了！」\n他不回答，對其他人說，「我不是甲。」便排出我不是噁男幾個字。\n他們又故意的高聲嚷道，「吼 你又好想狠狠的跳起來了！」\n**{arg}**睜大眼睛說，「你怎麼這樣憑空污人清白……」「什麼清白?我前天親眼見你噁人，還裝。」**{arg}**便漲紅了臉，額上的青筋條條綻出，爭辯道，「搭訕的事不能算……人際交流！……欣賞人的事，能算噁麼？」\n接連便是難懂的話，什麼「要是我是妹子」，什麼「我也很喜歡蘿莉」之類，引得眾人都鬨笑起來：群組內充滿了快活的空氣。')
 
-@bot.command()
+@bot.command()#ok
 async def agt(ctx,arg):
     p=random.randint(0,120)
     a=f"{arg} 有 **{p}%** 的可能去考指考"
@@ -332,7 +422,7 @@ async def agt(ctx,arg):
         await ctx.send(b)
     else:
         await ctx.send(a)
-        
+
 @bot.command()#這是最短，最單純，最美麗的function
 async def getchannelid(ctx):
     await ctx.send(ctx.channel.id)
