@@ -342,7 +342,8 @@ async def scrape_setup(ctx,arg):
                 if not arg[1] in scrape_target:
                     try:#scraper('time',arg[1],0)
                         tmp=-1
-                        async def create(ctx,arg):
+                        async def create(ctx,ch):
+                            nonlocal arg
                             scrape_platform.append('Facebook')
                             scrape_target.append(arg[1])
                             if comma2_isnotexist or arg[-1] == '':
@@ -350,9 +351,9 @@ async def scrape_setup(ctx,arg):
                                 scrape_creator.append(str(ctx.author))
                                 await ctx.send(PASS+'\n'+f':information_source:將於稍後於{ctx.channel.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
                             else:
-                                scrape_ch.append(str(arg.id))
+                                scrape_ch.append(str(ch.id))
                                 scrape_creator.append(str(ctx.author))
-                                await ctx.send(PASS+'\n'+f':information_source:將於稍後於{arg.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
+                                await ctx.send(PASS+'\n'+f':information_source:將於稍後於{ch.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
                             gsheet1(0,'create')
                         if comma2_isnotexist or arg[-1] == '':
                             if int(ctx.channel.id) != channel1:
