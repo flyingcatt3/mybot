@@ -109,11 +109,11 @@ def gsheet3(a,b):
         else:
             i+=1
     ws.update_value(f'A{i}',datetime.datetime.now().hour+8)
-    if ws.getvalue(f'B{i}')=='':
+    if ws.get_value(f'B{i}')=='':
         ws.update_value(f'B{i}',a)
     else:
         ws.update_value(f'B{i}',int(ws.getvalue(f'B{i}'))+a)
-    if ws.getvalue(f'C{i}')=='':
+    if ws.get_value(f'C{i}')=='':
         ws.update_value(f'C{i}',b)
     else:
         ws.update_value(f'C{i}',int(ws.getvalue(f'C{i}'))+b)
@@ -146,6 +146,8 @@ async def scrape():
         
             #s135=text,s246=url,s7=images
             if newurl_LEA!=oldurl_LEA and newurl_LEA!=None:
+                if m==len(urllist):
+                    urllist.append(0)
                 urllist[m]=newurl_LEA
                 gsheet2(newurl_LEA,1)
                 s1=scraper('text','LearningEnglishAmericanWay',-1)
@@ -158,6 +160,8 @@ async def scrape():
 
             newurl_gw=scraper('post_url','gainwind',-1)
             if newurl_gw!=oldurl_gw and newurl_gw!=None:
+                if m==len(urllist):
+                    urllist.append(0)
                 urllist[m]=newurl_gw
                 gsheet2(newurl_gw,2)
                 s3=scraper('text','gainwind',-1)
@@ -170,7 +174,9 @@ async def scrape():
 
             newurl_qmo=scraper('post_url','qmoleenglish',0)
             if newurl_qmo!=oldurl_qmo and newurl_qmo!=None:
-                urllist.append(newurl_qmo)
+                if m==len(urllist):
+                    urllist.append(0)
+                urllist[m]=newurl_qmo
                 gsheet2(newurl_qmo,3)
                 s5=("".join('\n'.join(scraper('text','qmoleenglish',0)).split('#')[0])).replace('\n\n','$').replace('\n','').replace('$','\n')
                 s7='\n'.join(scraper('images','qmoleenglish',0))
