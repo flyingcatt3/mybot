@@ -143,7 +143,6 @@ async def scrape():
 
         try:
             newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
-        
             #s135=text,s246=url,s7=images
             if newurl_LEA!=oldurl_LEA and newurl_LEA!=None:
                 if m==len(urllist):
@@ -235,7 +234,7 @@ async def scrape():
             await bot.get_channel(channel1).send(err)
             pass
 
-        gsheet3(1,x)
+        gsheet3(x,1)
 
         delay2 = random.choice(delay_choices2)  #隨機選取秒數
         await asyncio.sleep(delay2/(m/10+1))
@@ -353,6 +352,7 @@ async def scrape_setup(ctx,arg):
                         if comma2_isnotexist or arg[-1] == '':
                             if int(ctx.channel.id) != channel1:
                                 await ctx.send(':mag:Checking...')
+                                scraper('time',arg[1],0)###
                                 if int(ctx.author.id) != myid:
                                     await ctx.send(f'目標為  https://www.facebook.com/{arg[1]}/\n:warning:需要其他 2 人回覆:thumbsup:始可設定成功')
                                     i=0
@@ -369,6 +369,7 @@ async def scrape_setup(ctx,arg):
                                         tmp=0
                                 else:
                                     create(ctx.channel)
+                                    tmp=0
                             else:
                                 await ctx.send(':x:此頻道不能被指定，因為其在例外中')
                         elif int(arg[-1]) != channel1:
@@ -376,7 +377,7 @@ async def scrape_setup(ctx,arg):
                                 tmp=str(x.id).find(arg[-1])
                                 if tmp!=-1:
                                     await ctx.send(':mag:Checking...')
-                                    scraper('time',arg[1],0)
+                                    scraper('time',arg[1],0)###
                                     if int(ctx.author.id) != myid:
                                         await ctx.send(f'目標為  https://www.facebook.com/{arg[1]}/\n:warning:需要其他 2 人回覆:thumbsup:始可設定成功')
                                         async def check(m):
