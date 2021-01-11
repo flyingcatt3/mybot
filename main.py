@@ -123,6 +123,7 @@ def gsheet3(a,b):
         ws.update_value(f'C{i}',b)
     else:
         ws.update_value(f'C{i}',int(ws.get_value(f'C{i}'))+b)
+    now=datetime.datetime.now()
     if now.hour == 16 and now.minute < 6:
         ws.update_value(f'A{i}','=TODAY()')
     
