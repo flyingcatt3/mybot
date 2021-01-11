@@ -224,7 +224,7 @@ async def scrape():
                         toplist[m]=0
                 newurl=scraper('post_url',scrape_target[m],toplist[m])
                 if newurl!=urllist[m+3] and newurl!=None:
-                    gsheet2(newurl,m)
+                    gsheet2(newurl,m+3)
                     urllist[m+3]=newurl
                     text=scraper('text',scrape_target[m],toplist[m])
                     images=scraper('images',scrape_target[m],toplist[m])
