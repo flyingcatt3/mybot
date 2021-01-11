@@ -209,9 +209,10 @@ async def scrape():
 
             m=0
 
-            while m<len(scrape_platform):
+            while m<len(scrape_target):
                 if m == len(urllist):
                     urllist.append(0)
+                    toplist.append(0)
                 if toplist == []:
                     if (scraper('time',scrape_target[m],0)-datetime.datetime.now()).days>=7:
                         toplist[m]=-1
