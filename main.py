@@ -93,7 +93,7 @@ async def gsheet1(ctx,method):
                 await ctx.send(timeouterr)
 
 def gsheet2(url,row):
-    global sh,urllist,oldurl_LEA=oldurl_gw=oldurl_qmo
+    global sh,urllist,oldurl_LEA,oldurl_gw,oldurl_qmo
     ws = sh.worksheet_by_title('URL')
     if url=='fetch':
         url=' '.join(ws.get_values(start=(1,1), end=(103,1))[0]).split()
