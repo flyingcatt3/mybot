@@ -93,7 +93,7 @@ async def gsheet1(ctx,method):
                 await ctx.send(timeouterr)
 
 def gsheet2(url,row):
-    global sh,urllist,oldurl_LEA,oldurl_gw,oldurl_qmo
+    global sh,urllist
     ws = sh.worksheet_by_title('URL')
     if url=='fetch':
         url=' '.join(ws.get_values(start=(1,1), end=(103,1))[0]).split()
@@ -143,7 +143,6 @@ async def scrape():
 
     #define
     
-    oldurl_LEA=oldurl_gw=oldurl_qmo=0
     global urllist,scrape_target,scrape_ch
     toplist=[]
     warn=':warning:如果有些圖片沒有顯示，可以點擊貼文的URL'
@@ -165,7 +164,7 @@ async def scrape():
                 urllist[m]=newurl_LEA
                 gsheet2(newurl_LEA,1)
                 s1=scraper('text','LearningEnglishAmericanWay',-1)
-                oldurl_LEA=s2=newurl_LEA
+                s2=newurl_LEA
                 x+=1
                 m+=1
             else:
@@ -179,7 +178,7 @@ async def scrape():
                 urllist[m]=newurl_gw
                 gsheet2(newurl_gw,2)
                 s3=scraper('text','gainwind',-1)
-                oldurl_gw=s4=newurl_gw
+                s4=newurl_gw
                 x+=1
                 m+=1
             else:
@@ -194,7 +193,7 @@ async def scrape():
                 gsheet2(newurl_qmo,3)
                 s5=("".join('\n'.join(scraper('text','qmoleenglish',0)).split('#')[0])).replace('\n\n','$').replace('\n','').replace('$','\n')
                 s7='\n'.join(scraper('images','qmoleenglish',0))
-                oldurl_qmo=s6=newurl_qmo
+                s6=newurl_qmo
                 x+=1
                 m+=1
             else:
