@@ -478,6 +478,12 @@ async def scrape_setuperr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         await ctx.send(help_scrape_setup)
 
+@agt.error#ok
+async def hulanerr(ctx,err):
+    if isinstance(err,commands.errors.MissingRequiredArgument):
+        await bot.wait_until_ready()
+        await agt(ctx,ctx.author.mention)
+
 bot.loop.create_task(scrape())
 logging.basicConfig(level=logging.INFO)
 bot.run(token)
