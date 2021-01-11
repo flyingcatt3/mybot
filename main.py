@@ -55,19 +55,19 @@ async def gsheet1(ctx,method):
             return 1
     if method=='fetch':
         N=int(ws.get_value('I1'))
-        D=' '.join(ws.get_values(start=(2,4), end=(N,4))[0]).split()
-        E=' '.join(ws.get_values(start=(2,5), end=(N,5))[0]).split()
-        F=' '.join(ws.get_values(start=(2,6), end=(N,6))[0]).split()
-        G=' '.join(ws.get_values(start=(2,7), end=(N,7))[0]).split()
+        D=ws.get_values(start=(2,4), end=(N,4))
+        E=ws.get_values(start=(2,5), end=(N,5))
+        F=ws.get_values(start=(2,6), end=(N,6))
+        G=ws.get_values(start=(2,7), end=(N,7))
         i=0
         while i<100:
-            if i==len(D):
+            if i==len(D) or D[i]==['']:
                 break
             else:
-                scrape_platform.append(D[i])
-                scrape_target.append(E[i])
-                scrape_ch.append(F[i])
-                scrape_creator.append(G[i])
+                scrape_platform.append(' '.join(D[i]))
+                scrape_target.append(' '.join(E[i]))
+                scrape_ch.append(' '.join(F[i]))
+                scrape_creator.append(' '.join(G[i]))
             i+=1
     elif method=='create':
         N=ws.get_value('I1')
@@ -99,7 +99,7 @@ def gsheet2(url,row):
         url=ws.get_values(start=(1,1), end=(103,1))
         i=0
         while i<103:
-            if i==len(url):
+            if i==len(url) or url[i]==['']:
                 break
             else:
                 urllist.append(' '.join(url[i]))
