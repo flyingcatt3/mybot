@@ -479,7 +479,7 @@ async def scrape_setuperr(ctx,err):
         await ctx.send(help_scrape_setup)
 
 @agt.error#ok
-async def hulanerr(ctx,err):
+async def agterr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         await bot.wait_until_ready()
         await agt(ctx,ctx.author.mention)
