@@ -71,13 +71,12 @@ async def gsheet1(ctx,method):
         N=ws.get_value('I1')
         ws.update_values(crange=f'D{N}:G{N}',values=[[scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
     else:
-        method=method.strip()[0]
         n=int(method.strip()[1])+1
         if ws.get_value(f'A{n}')=='':
             await ctx.send(':x:Error 404')
         elif ws.get_value(f'G{n}')!=str(ctx.author):
             await ctx.send(':x:只有創建者才能進行操作')    
-        elif method == 'n':
+        elif method.strip()[0] == 'n':
             await ctx.send('請輸入備註:')
             try:
                 await bot.wait_for('message', timeout=60.0, check=check)
