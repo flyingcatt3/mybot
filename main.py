@@ -68,16 +68,16 @@ async def gsheet1(ctx,method):
     else:
         method=method.strip()[0]
         n=int(method.strip()[1])+1
-    if ws.get_value(f'A{n}')=='':
-        await ctx.send(':x:Error 404')
-    elif ws.get_value(f'G{n}')!=str(ctx.author):
-        await ctx.send(':x:只有創建者才能進行操作')    
-    elif method.startswith('n'):
-        await ctx.send('請輸入備註:')
-        try:
-            await bot.wait_for('message', timeout=60.0, check=check)
-        except asyncio.TimeoutError:
-            await ctx.send(timeouterr)
+        if ws.get_value(f'A{n}')=='':
+            await ctx.send(':x:Error 404')
+        elif ws.get_value(f'G{n}')!=str(ctx.author):
+            await ctx.send(':x:只有創建者才能進行操作')    
+        elif method.startswith('n'):
+            await ctx.send('請輸入備註:')
+            try:
+                await bot.wait_for('message', timeout=60.0, check=check)
+            except asyncio.TimeoutError:
+                await ctx.send(timeouterr)
 
     else:
         await ctx.send(f":warning:確定要刪除編號 **{n}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
