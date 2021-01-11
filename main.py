@@ -28,6 +28,8 @@ err_scrape_setup_remove=':x:Format error.\nusage:``remove[設定編號]``'
 err_scrape_setup_note=':x:Format error.\nusage:``note[設定編號]``'
 
 urllist=[]
+urldate=0
+firstdate=0
 
 PASS=':white_check_mark:Set up successfully.'
 timeouterr=':x:**操作逾時**'
@@ -91,7 +93,7 @@ async def gsheet1(ctx,method):
                 await ctx.send(timeouterr)
 
 def gsheet2(url,row):
-    global sh,urllist
+    global sh,urllist,oldurl_LEA=oldurl_gw=oldurl_qmo
     ws = sh.worksheet_by_title('URL')
     if url=='fetch':
         url=' '.join(ws.get_values(start=(1,1), end=(103,1))[0]).split()
@@ -106,15 +108,23 @@ def gsheet2(url,row):
         ws.update_value(f'A{row}',url)
 
 def gsheet3(a,b):
-    global sh
+    global sh,urldate,firstdate
     ws = sh.worksheet_by_title('Cycle')
     i=2
     while 1:
-        if ws.get_value(f'A{i}').isdigit() or ws.get_value(f'A{i}')=='':
+        tmp=ws.get_value(f'A{i}')
+        if tmp=='':
+            firstdate=1
             break
-        else:
-            i+=1
-    ws.update_value(f'A{i}','0')
+        elif tmp!=urldate:
+            urldate=tmp
+            if firstdate==0:
+                ws.update_value(f'A{i}','=TODAY()-1')
+                i+=1
+            else:
+                firstdate=0
+                break
+
     if ws.get_value(f'B{i}')=='':
         ws.update_value(f'B{i}',a)
     else:
@@ -123,9 +133,6 @@ def gsheet3(a,b):
         ws.update_value(f'C{i}',b)
     else:
         ws.update_value(f'C{i}',int(ws.get_value(f'C{i}'))+b)
-    now=datetime.datetime.now()
-    if now.hour == 16 and now.minute < 6:
-        ws.update_value(f'A{i}','=TODAY()')
     
 def scraper(sort,target,N):
     return ([post[sort] for post in get_posts(target, pages=1,timeout=10)][N])
@@ -146,13 +153,15 @@ async def scrape():
         if urllist==[]:
             await gsheet1(0,'fetch')
             gsheet2('fetch',0)
+        if m==len(urllist):
+            i=0
+            while i<3:
+                urllist.append(0)
+                i+=1
 
-        try:
+        try:#s135=text,s246=url,s7=images
             newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
-            #s135=text,s246=url,s7=images
-            if newurl_LEA!=oldurl_LEA and newurl_LEA!=None:
-                if m==len(urllist):
-                    urllist.append(0)
+            if newurl_LEA!=urllist[m] and newurl_LEA!=None:
                 urllist[m]=newurl_LEA
                 gsheet2(newurl_LEA,1)
                 s1=scraper('text','LearningEnglishAmericanWay',-1)
@@ -164,7 +173,7 @@ async def scrape():
             await asyncio.sleep(random.choice(delay_choices1))
 
             newurl_gw=scraper('post_url','gainwind',-1)
-            if newurl_gw!=oldurl_gw and newurl_gw!=None:
+            if newurl_gw!=urllist[m] and newurl_gw!=None:
                 if m==len(urllist):
                     urllist.append(0)
                 urllist[m]=newurl_gw
@@ -178,7 +187,7 @@ async def scrape():
             await asyncio.sleep(random.choice(delay_choices1))
 
             newurl_qmo=scraper('post_url','qmoleenglish',0)
-            if newurl_qmo!=oldurl_qmo and newurl_qmo!=None:
+            if newurl_qmo!=urllist[m] and newurl_qmo!=None:
                 if m==len(urllist):
                     urllist.append(0)
                 urllist[m]=newurl_qmo
