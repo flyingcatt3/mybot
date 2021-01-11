@@ -38,10 +38,9 @@ sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-
 async def gsheet1(ctx,method):
     global sh,scrape_platform,scrape_target,scrape_ch,scrape_creator
     ws = sh.worksheet_by_title('爬蟲組態')
-    now = time.strftime("%Y-%m-%d %I:%M:%S", time.localtime())
     async def check(m):
         if m=='是':
-            ws.update_value(f'C{n}',now)
+            ws.update_value(f'C{n}','=TODAY()')
             await ctx.send(':white_check_mark:Removed.')
             return 1
         elif method=='n':
@@ -64,7 +63,8 @@ async def gsheet1(ctx,method):
                 scrape_creator.append(G[i])
             i+=1
     elif method=='create':
-        ws.append_table(values=[['',now,'',scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
+        N=ws.get_value('I1')
+        ws.update_values(f'D{N}:G{N}',scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1])
     else:
         method=method.strip()[0]
         n=int(method.strip()[1])+1
@@ -209,7 +209,7 @@ async def scrape():
             m=0
 
             while m<len(scrape_target):
-                if m == len(urllist):
+                if m+3 == len(urllist):
                     urllist.append(0)
                     toplist.append(0)
                 if toplist == []:
