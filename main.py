@@ -96,13 +96,13 @@ def gsheet2(url,row):
     global sh,urllist
     ws = sh.worksheet_by_title('URL')
     if url=='fetch':
-        url=' '.join(ws.get_values(start=(1,1), end=(103,1))[0]).split()
+        url=ws.get_values(start=(1,1), end=(103,1))
         i=0
         while i<103:
             if i==len(url):
                 break
             else:
-                urllist.append(url[i])
+                urllist.append(' '.join(url[i]))
             i+=1
     else:
         ws.update_value(f'A{row}',url)
@@ -152,6 +152,7 @@ async def scrape():
         if urllist==[]:
             await gsheet1(0,'fetch')
             gsheet2('fetch',0)
+        asyncio.sleep(5)
         if m==len(urllist):
             i=0
             while i<3:
@@ -173,8 +174,6 @@ async def scrape():
 
             newurl_gw=scraper('post_url','gainwind',-1)
             if newurl_gw!=urllist[m] and newurl_gw!=None:
-                if m==len(urllist):
-                    urllist.append(0)
                 urllist[m]=newurl_gw
                 gsheet2(newurl_gw,2)
                 s3=scraper('text','gainwind',-1)
@@ -187,8 +186,6 @@ async def scrape():
 
             newurl_qmo=scraper('post_url','qmoleenglish',0)
             if newurl_qmo!=urllist[m] and newurl_qmo!=None:
-                if m==len(urllist):
-                    urllist.append(0)
                 urllist[m]=newurl_qmo
                 gsheet2(newurl_qmo,3)
                 s5=("".join('\n'.join(scraper('text','qmoleenglish',0)).split('#')[0])).replace('\n\n','$').replace('\n','').replace('$','\n')
