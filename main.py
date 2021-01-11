@@ -138,7 +138,7 @@ async def scrape():
     while 1:
         m=x=0
         if urllist==[]:
-            gsheet1(0,'fetch')
+            await gsheet1(0,'fetch')
             gsheet2('fetch',0)
 
         try:
@@ -324,12 +324,12 @@ async def scrape_setup(ctx,arg):
         await ctx.send(':information_source:**爬蟲組態** https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ')
     elif arg.startswith('remove'):
         if arg.strip('remove').isdigit():
-            gsheet1(ctx,arg)
+            await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_remove)
     elif arg.startswith('note'):
         if arg.strip('note').isdigit():
-            gsheet1(ctx,arg)
+            await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_note)
     elif arg.find(',')!=-1:
@@ -354,7 +354,7 @@ async def scrape_setup(ctx,arg):
                                 scrape_ch.append(str(ch.id))
                                 scrape_creator.append(str(ctx.author))
                                 await ctx.send(PASS+'\n'+f':information_source:將於稍後於{ch.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
-                            gsheet1(0,'create')
+                            await gsheet1(0,'create')
                         if comma2_isnotexist or arg[-1] == '':
                             if int(ctx.channel.id) != channel1:
                                 await ctx.send(':mag:Checking...')
