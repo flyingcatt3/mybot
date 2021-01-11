@@ -41,11 +41,11 @@ async def gsheet1(ctx,method):
     now = time.strftime("%Y-%m-%d %I:%M:%S", time.localtime())
     async def check(m):
         if m=='是':
-            ws.update_value(f'C{tmp}',now)
+            ws.update_value(f'C{n}',now)
             await ctx.send(':white_check_mark:Removed.')
             return 1
-        elif method.startswith('note'):
-            ws.update_value(f'H{tmp}',m)
+        elif method=='n':
+            ws.update_value(f'H{n}',m)
             await ctx.send(':white_check_mark:The note is added.')
             return 1
     if method=='fetch':
@@ -65,20 +65,22 @@ async def gsheet1(ctx,method):
             i+=1
     elif method=='create':
         ws.append_table(values=[['',now,'',scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
-    elif ws.get_value(f'A{method+1}')=='':
+    else:
+        method=method.strip()[0]
+        n=int(method.strip()[1])+1
+    if ws.get_value(f'A{n}')=='':
         await ctx.send(':x:Error 404')
-    elif ws.get_value(f'G{method+1}')!=str(ctx.author):
+    elif ws.get_value(f'G{n}')!=str(ctx.author):
         await ctx.send(':x:只有創建者才能進行操作')    
-    elif method.startswith('note'):
-        tmp=int(method.strip('note'))+1
+    elif method.startswith('n'):
         await ctx.send('請輸入備註:')
         try:
             await bot.wait_for('message', timeout=60.0, check=check)
         except asyncio.TimeoutError:
             await ctx.send(timeouterr)
+
     else:
-        tmp=int(method.strip('remove'))+1
-        await ctx.send(f":warning:確定要刪除編號 **{method}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
+        await ctx.send(f":warning:確定要刪除編號 **{n}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
         try:
             await bot.wait_for('message', timeout=60.0, check=check)
         except asyncio.TimeoutError:
@@ -324,11 +326,13 @@ async def scrape_setup(ctx,arg):
         await ctx.send(':information_source:**爬蟲組態** https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ')
     elif arg.startswith('remove'):
         if arg.strip('remove').isdigit():
+            arg='r '+arg.strip('remove')
             await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_remove)
     elif arg.startswith('note'):
         if arg.strip('note').isdigit():
+            arg='n '+arg.strip('note')
             await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_note)
