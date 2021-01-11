@@ -114,7 +114,7 @@ def gsheet3(a,b):
             break
         else:
             i+=1
-    ws.update_value(f'A{i}',datetime.datetime.now().hour+8)
+    ws.update_value(f'A{i}','0')
     if ws.get_value(f'B{i}')=='':
         ws.update_value(f'B{i}',a)
     else:
@@ -331,14 +331,16 @@ async def scrape_setup(ctx,arg):
     elif arg == 'list':
         await ctx.send(':information_source:**爬蟲組態** https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ')
     elif arg.startswith('remove'):
-        if arg.strip('remove').isdigit():
-            arg='r '+arg.strip('remove')
+        arg=arg.replace('remove','')
+        if arg.isdigit():
+            arg='r '+arg
             await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_remove)
     elif arg.startswith('note'):
-        if arg.strip('note').isdigit():
-            arg='n '+arg.strip('note')
+        arg=arg.replace('note','')
+        if arg.isdigit():
+            arg='n '+arg
             await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_note)
