@@ -69,7 +69,7 @@ async def gsheet1(ctx,method):
             i+=1
     elif method=='create':
         N=ws.get_value('I1')
-        ws.update_values(f'D{N}:G{N}',scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1])
+        ws.update_values(crange=f'D{N}:G{N}',values=[[scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
     else:
         method=method.strip()[0]
         n=int(method.strip()[1])+1
@@ -416,7 +416,7 @@ async def scrape_setup(ctx,arg):
                         if str(arg[-1]) == str(channel1):    await ctx.send(':x:此頻道不能被指定，因為其在例外中')
                         elif tmp==-1:   await ctx.send(':x:被指定的頻道不存在，或是機器人沒有查看該頻道的權限')
                     except Exception:
-                        await ctx.send(traceback.format_exc())
+                        #await ctx.send(traceback.format_exc())
                         await ctx.send(':x:目標名稱不存在於 Facebook 上')
                         pass
                 else:
