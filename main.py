@@ -78,13 +78,12 @@ async def gsheet1(ctx,method):
                 await bot.wait_for('message', timeout=60.0, check=check)
             except asyncio.TimeoutError:
                 await ctx.send(timeouterr)
-
-    else:
-        await ctx.send(f":warning:確定要刪除編號 **{n}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
-        try:
-            await bot.wait_for('message', timeout=60.0, check=check)
-        except asyncio.TimeoutError:
-            await ctx.send(timeouterr)
+        else:
+            await ctx.send(f":warning:確定要刪除編號 **{n}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
+            try:
+                await bot.wait_for('message', timeout=60.0, check=check)
+            except asyncio.TimeoutError:
+                await ctx.send(timeouterr)
 
 def gsheet2(url,row):
     global sh,urllist
