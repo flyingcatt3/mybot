@@ -167,11 +167,10 @@ async def scrape():
                 s1=scraper('text','LearningEnglishAmericanWay',-1)
                 s2=newurl_LEA
                 x+=1
-                m+=1
             else:
                 s1=s2='0'
             await asyncio.sleep(random.choice(delay_choices1))
-
+            m+=1
             newurl_gw=scraper('post_url','gainwind',-1)
             if newurl_gw!=urllist[m] and newurl_gw!=None:
                 urllist[m]=newurl_gw
@@ -179,11 +178,10 @@ async def scrape():
                 s3=scraper('text','gainwind',-1)
                 s4=newurl_gw
                 x+=1
-                m+=1
             else:
                 s3=s4='0'
             await asyncio.sleep(random.choice(delay_choices1))
-
+            m+=1
             newurl_qmo=scraper('post_url','qmoleenglish',0)
             if newurl_qmo!=urllist[m] and newurl_qmo!=None:
                 urllist[m]=newurl_qmo
@@ -192,10 +190,9 @@ async def scrape():
                 s7='\n'.join(scraper('images','qmoleenglish',0))
                 s6=newurl_qmo
                 x+=1
-                m+=1
             else:
                 s5=s6=s7='0'
-
+            m+=1
             if s1!=s2 and s3!=s4:
                 s=s1+'\n'+s2+'\n'+"------"+'\n'+s3+'\n'+s4
             elif s1!=s2:
@@ -205,7 +202,6 @@ async def scrape():
             else:
                 s=0
             if s!=0 or s5!='0':
-                x+=1
                 if s!=0:
                     await bot.get_channel(channel1).send(s)
                 if s5!='0':
@@ -240,7 +236,7 @@ async def scrape():
                         await bot.get_channel(int(scrape_ch[m])).send(images)
                         await bot.get_channel(int(scrape_ch[m])).send(warn)
                     await asyncio.sleep(random.choice(delay_choices1))
-                x+=1
+                    x+=1
                 m+=1
         except Exception:
             err=':x:**[ERROR]**```\n'+traceback.format_exc()+'\n```\n'+'To debug, visit https://app.kintohub.com/app/environment/5fd51313ebd88626fb287d51/services/mybot/manage/console'
