@@ -205,21 +205,22 @@ async def scrape():
                         await bot.get_channel(channel1).send(s7)
                         await bot.get_channel(channel1).send(s6)
                         await bot.get_channel(channel1).send(warn)
-            m=3
             await asyncio.sleep(random.choice(delay_choices1))
 
-            while m<len(scrape_platform)+3:
+            m=0
+
+            while m<len(scrape_platform):
                 if m == len(urllist):
                     urllist.append(0)
                 if toplist == []:
                     if (scraper('time',scrape_target[m],0)-datetime.datetime.now()).days>=7:
-                        toplist.append(-1)
+                        toplist[m]=-1
                     else:
-                        toplist.append(0)
+                        toplist[m]=0
                 newurl=scraper('post_url',scrape_target[m],toplist[m])
-                if newurl!=urllist[m] and newurl!=None:
-                    gsheet2(newurl,m+3)
-                    urllist[m]=newurl
+                if newurl!=urllist[m+3] and newurl!=None:
+                    gsheet2(newurl,m)
+                    urllist[m+3]=newurl
                     text=scraper('text',scrape_target[m],toplist[m])
                     images=scraper('images',scrape_target[m],toplist[m])
                     S=text+'\n'+newurl
