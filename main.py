@@ -416,7 +416,7 @@ async def scrape_setup(ctx,arg):
                         if str(arg[-1]) == str(channel1):    await ctx.send(':x:此頻道不能被指定，因為其在例外中')
                         elif tmp==-1:   await ctx.send(':x:被指定的頻道不存在，或是機器人沒有查看該頻道的權限')
                     except Exception:
-                        #await ctx.send(traceback.format_exc())
+                        await ctx.send(traceback.format_exc())
                         await ctx.send(':x:目標名稱不存在於 Facebook 上')
                         pass
                 else:
