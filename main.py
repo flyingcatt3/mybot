@@ -371,10 +371,10 @@ async def scrape_setup(ctx,arg):
                                     except asyncio.TimeoutError:
                                         await ctx.send(timeouterr)
                                     if i==2:
-                                        create(ctx,0)
+                                        await create(ctx,0)
                                         tmp=0
                                 else:
-                                    create(ctx,0)
+                                    await create(ctx,0)
                                     tmp=0
                             else:
                                 await ctx.send(':x:此頻道不能被指定，因為其在例外中')
@@ -396,10 +396,10 @@ async def scrape_setup(ctx,arg):
                                         except asyncio.TimeoutError:
                                             await ctx.send(timeouterr)
                                         if i==2:
-                                            create(ctx,x)
+                                            await create(ctx,x)
                                             tmp=0
                                     else:
-                                        create(ctx,x)
+                                        await create(ctx,x)
                                         tmp=0
                                     break
                         if str(arg[-1]) == str(channel1):    await ctx.send(':x:此頻道不能被指定，因為其在例外中')
