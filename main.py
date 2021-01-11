@@ -39,19 +39,24 @@ async def gsheet1(ctx,method):
     global sh,scrape_platform,scrape_target,scrape_ch,scrape_creator
     ws = sh.worksheet_by_title('爬蟲組態')
     async def check(m):
-        if m=='是':
+        if m.content=='是':
             ws.update_value(f'C{n}','=TODAY()')
+            scrape_platform.remove(scrape_platform[n-2])
+            scrape_target.remove(scrape_target[n-2])
+            scrape_ch.remove(scrape_ch[n-2])
+            scrape_creator.remove(scrape_creator[n-2])
             await ctx.send(':white_check_mark:Removed.')
             return 1
         elif method=='n':
-            ws.update_value(f'H{n}',m)
+            ws.update_value(f'H{n}',m.content)
             await ctx.send(':white_check_mark:The note is added.')
             return 1
     if method=='fetch':
-        D=' '.join(ws.get_values(start=(2,4), end=(101,4))[0]).split()
-        E=' '.join(ws.get_values(start=(2,5), end=(101,5))[0]).split()
-        F=' '.join(ws.get_values(start=(2,6), end=(101,6))[0]).split()
-        G=' '.join(ws.get_values(start=(2,7), end=(101,7))[0]).split()
+        N=int(ws.get_value('I1'))
+        D=' '.join(ws.get_values(start=(2,4), end=(N,4))[0]).split()
+        E=' '.join(ws.get_values(start=(2,5), end=(N,5))[0]).split()
+        F=' '.join(ws.get_values(start=(2,6), end=(N,6))[0]).split()
+        G=' '.join(ws.get_values(start=(2,7), end=(N,7))[0]).split()
         i=0
         while i<100:
             if i==len(D):
@@ -72,10 +77,11 @@ async def gsheet1(ctx,method):
             await ctx.send(':x:Error 404')
         elif ws.get_value(f'G{n}')!=str(ctx.author):
             await ctx.send(':x:只有創建者才能進行操作')    
-        elif method.startswith('n'):
+        elif method == 'n':
             await ctx.send('請輸入備註:')
             try:
                 await bot.wait_for('message', timeout=60.0, check=check)
+
             except asyncio.TimeoutError:
                 await ctx.send(timeouterr)
         else:
