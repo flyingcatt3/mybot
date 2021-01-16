@@ -22,14 +22,14 @@ delay_choices2 = [300, 330, 360, 390, 420] #延遲的秒數 #@scrape()
 err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
 #@scrape_setup()
-help_scrape_setup=':information_source: 這是設定爬蟲的指令！'+'P.S. 不包含置頂貼文'+'\n'+'usage: ``.scrape_setup 平臺名稱,目標名稱,頻道ID``'+'\n'+'若``頻道ID``沒有指定，則會以目前你所在的頻道為預設值'+'\n'+'e.g. (1)``.scrape_setup fb,discord``'+'\n'+'e.g. (2)``.scrape_setup fb,discord,頻道ID``'
-err_scrape_setup=":x:Format error."+'\n'+"For help, type `.scrape_setup help`."
+help_scrape_setup=':information_source: 這是設定爬蟲的指令！P.S. 不包含置頂貼文\nusage: ``.scrape_setup create 平臺名稱,目標名稱,頻道ID(可略)``\n``頻道ID``預設值=被送出指令所在頻道\ne.g.``.scrape_setup fb,discord``'
+err_scrape_setup=':x:Format error.\nFor help, type `.scrape_setup`'
 err_scrape_setup_remove=':x:Format error.\nusage:``remove[設定編號]``'
 err_scrape_setup_note=':x:Format error.\nusage:``note[設定編號]``'
 
 urllist=toplist=[]
 
-PASS=':white_check_mark:Set up successfully.'
+PASS=':white_check_mark:Set up successfully.\n'
 timeouterr=':x:**操作逾時**'
 
 gc = pygsheets.authorize(service_account_file='./credentials.json')
@@ -62,7 +62,9 @@ async def gsheet1(ctx,method):
         while i<100:
             if i==len(D) or D[i]==['']:
                 break
-            elif C[i]!='':
+            elif C[i]!='' and C[i+1]=='':
+                break
+            elif C[i]!='' and C[i+1]!='':
                 continue
             else:
                 scrape_platform.append(' '.join(D[i]))
@@ -364,17 +366,17 @@ async def scrape_setup(ctx,arg):
                     try:#scraper('time',arg[1],0)
                         tmp=-1
                         async def create(ctx,ch):
-                            nonlocal arg
+                            addition='\n移除=``remove[設定編號]``\n加上備註=``note[設定編號]``'
                             scrape_platform.append('Facebook')
                             scrape_target.append(arg[1])
                             if comma2_isnotexist or arg[-1] == '':
                                 scrape_ch.append(str(ctx.channel.id))
                                 scrape_creator.append(str(ctx.author))
-                                await ctx.send(PASS+'\n'+f':information_source:將於稍後於{ctx.channel.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
+                                await ctx.send(PASS+f':information_source:將於稍後於{ctx.channel.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新{addition}')
                             else:
                                 scrape_ch.append(str(ch.id))
                                 scrape_creator.append(str(ctx.author))
-                                await ctx.send(PASS+'\n'+f':information_source:將於稍後於{ch.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新')
+                                await ctx.send(PASS+f':information_source:將於稍後於{ch.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新{addition}')
                             await gsheet1(0,'create')
                         if comma2_isnotexist or arg[-1] == '':
                             if int(ctx.channel.id) != channel1:
