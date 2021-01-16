@@ -370,7 +370,7 @@ async def scrape_setup(ctx,arg):
                     try:#scraper('time',arg[1],0)
                         tmp=-1
                         async def create(ctx,ch):
-                            addition='\n移除=``remove[設定編號]``\n加上備註=``note[設定編號]``'
+                            addition='\n移除=``remove[設定編號]``\n加上備註=``note[設定編號]``\ne.g. ``.scrape_setup note1``'
                             scrape_platform.append('Facebook')
                             scrape_target.append(arg[1])
                             if comma2_isnotexist or arg[-1] == '':
