@@ -97,7 +97,7 @@ def gsheet2(urllist_or_toplist,row):
     if urllist_or_toplist=='fetch':
         url=ws.get_values(start=(1,1), end=(103,1))
         top=ws.get_values(start=(1,2), end=(103,2))
-        i=0
+        i=j=0
         while i<103:
             if i==len(url) or url[i]==['']:
                 break
@@ -105,6 +105,12 @@ def gsheet2(urllist_or_toplist,row):
                 urllist.append(' '.join(url[i]))
                 urllist.append(' '.join(top[i]))
             i+=1
+        while j<103:
+            if j==len(top) or top[i]==['']:
+                break
+            else:
+                urllist.append(' '.join(top[j]))
+            j+=1
     else:
         if urllist_or_toplist.isdigit():
             ws.update_value(f'B{row}',urllist_or_toplist)
