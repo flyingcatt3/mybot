@@ -27,9 +27,8 @@ err_scrape_setup=":x:Format error."+'\n'+"For help, type `.scrape_setup help`."
 err_scrape_setup_remove=':x:Format error.\nusage:``remove[設定編號]``'
 err_scrape_setup_note=':x:Format error.\nusage:``note[設定編號]``'
 
-urllist=[]
-urldate=0
-firstdate=0
+urllist=toplist=[]
+urldate=firstdate=0
 
 PASS=':white_check_mark:Set up successfully.'
 timeouterr=':x:**操作逾時**'
@@ -92,20 +91,25 @@ async def gsheet1(ctx,method):
             except asyncio.TimeoutError:
                 await ctx.send(timeouterr)
 
-def gsheet2(url,row):
-    global sh,urllist
+def gsheet2(urllist_or_toplist,row):
+    global sh,urllist,toplist
     ws = sh.worksheet_by_title('URL')
     if url=='fetch':
         url=ws.get_values(start=(1,1), end=(103,1))
+        top=ws.get_values(start=(1,2), end=(103,2))
         i=0
         while i<103:
             if i==len(url) or url[i]==['']:
                 break
             else:
                 urllist.append(' '.join(url[i]))
+                urllist.append(' '.join(top[i]))
             i+=1
     else:
-        ws.update_value(f'A{row}',url)
+        if urllist_or_toplist.isdigit():
+            ws.update_value(f'B{row}',urllist_or_toplist)
+        else:
+            ws.update_value(f'A{row}',urllist_or_toplist)
 
 def gsheet3(a,b):
     global sh,urldate,firstdate
@@ -223,6 +227,7 @@ async def scrape():
                         toplist[m]=-1
                     else:
                         toplist[m]=0
+                    gsheet2(toplist[m],m+4)
                 newurl=scraper('post_url',scrape_target[m],toplist[m])
                 if newurl!=urllist[m+3] and newurl!=None:
                     gsheet2(newurl,m+4)
