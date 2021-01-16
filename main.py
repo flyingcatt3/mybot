@@ -28,7 +28,6 @@ err_scrape_setup_remove=':x:Format error.\nusage:``remove[設定編號]``'
 err_scrape_setup_note=':x:Format error.\nusage:``note[設定編號]``'
 
 urllist=toplist=[]
-urldate=firstdate=0
 
 PASS=':white_check_mark:Set up successfully.'
 timeouterr=':x:**操作逾時**'
@@ -42,6 +41,7 @@ async def gsheet1(ctx,method):
     async def check(m):
         if m.content=='是':
             ws.update_value(f'C{n}','=TODAY()')
+            ws.update_value(f'C{n}',ws.get_value(f'C{n}'))
             scrape_platform.remove(scrape_platform[n-2])
             scrape_target.remove(scrape_target[n-2])
             scrape_ch.remove(scrape_ch[n-2])
@@ -71,6 +71,7 @@ async def gsheet1(ctx,method):
     elif method=='create':
         N=ws.get_value('I1')
         ws.update_values(crange=f'D{N}:G{N}',values=[[scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
+        ws.update_value(f'B{N}','=TODAY()')
         ws.update_value(f'B{N}',ws.get_value(f'B{N}'))
     else:
         n=int(method.strip()[1])+1
@@ -118,23 +119,15 @@ def gsheet2(urllist_or_toplist,row):
             ws.update_value(f'A{row}',urllist_or_toplist)
 
 def gsheet3(a,b):
-    global sh,urldate,firstdate
+    global sh
     ws = sh.worksheet_by_title('Cycle')
-    i=2
-    while 1:
-        tmp=ws.get_value(f'A{i}')
-        if tmp=='':
-            firstdate=1
-            break
-        elif tmp!=urldate:
-            urldate=tmp
-            if firstdate==0:
-                ws.update_value(f'A{i}','=TODAY()-1')
-                i+=1
-            else:
-                firstdate=0
-                break
-
+    if ws.get_value('A2')=='':
+        i=2
+        ws.update_value('A2','=TODAY()')
+        ws.update_value('A2',ws.get_value('A2'))
+    else:
+        ws.update_value('D1',f'=DAYS(TODAY(),A2)')
+        i=2+int(ws.get_value('D1'))
     if ws.get_value(f'B{i}')=='':
         ws.update_value(f'B{i}',a)
     else:
@@ -345,14 +338,14 @@ async def scrape_setup(ctx,arg):
     elif arg.startswith('remove'):
         arg=arg.replace('remove','')
         if arg.isdigit():
-            arg='r '+arg
+            arg='r'+arg
             await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_remove)
     elif arg.startswith('note'):
         arg=arg.replace('note','')
         if arg.isdigit():
-            arg='n '+arg
+            arg='n'+arg
             await gsheet1(ctx,arg)
         else:
             await ctx.send(err_scrape_setup_note)
