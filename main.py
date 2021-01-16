@@ -94,7 +94,7 @@ async def gsheet1(ctx,method):
 def gsheet2(urllist_or_toplist,row):
     global sh,urllist,toplist
     ws = sh.worksheet_by_title('URL')
-    if url=='fetch':
+    if urllist_or_toplist=='fetch':
         url=ws.get_values(start=(1,1), end=(103,1))
         top=ws.get_values(start=(1,2), end=(103,2))
         i=0
