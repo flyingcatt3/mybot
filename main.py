@@ -165,7 +165,7 @@ async def scrape():
 
     while 1:
         m=x=0
-        if urllist==[]:
+        if urllist==['']*3:
             await gsheet1(0,'fetch')
             gsheet2('fetch',0)
         asyncio.sleep(5)
