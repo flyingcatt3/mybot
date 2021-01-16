@@ -52,7 +52,7 @@ async def gsheet1(ctx,method):
             scrape_ch.remove(scrape_ch[n-2])
             scrape_creator.remove(scrape_creator[n-2])
             return 1
-        elif method=='n':
+        elif method.startswith('n'):
             ws1.update_value(f'H{n}',m.content)
             return 1
     if method=='fetch':
