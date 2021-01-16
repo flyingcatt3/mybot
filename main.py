@@ -71,6 +71,7 @@ async def gsheet1(ctx,method):
     elif method=='create':
         N=ws.get_value('I1')
         ws.update_values(crange=f'D{N}:G{N}',values=[[scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
+        ws.update_value(f'B{N}',ws.get_value(f'B{N}'))
     else:
         n=int(method.strip()[1])+1
         if ws.get_value(f'A{n}')=='':
@@ -103,16 +104,15 @@ def gsheet2(urllist_or_toplist,row):
                 break
             else:
                 urllist.append(' '.join(url[i]))
-                urllist.append(' '.join(top[i]))
             i+=1
         while j<103:
-            if j==len(top) or top[i]==['']:
+            if j==len(top) or top[j]==['']:
                 break
             else:
                 urllist.append(' '.join(top[j]))
             j+=1
     else:
-        if urllist_or_toplist.isdigit():
+        if type(urllist_or_toplist.isdigit) == int:
             ws.update_value(f'B{row}',urllist_or_toplist)
         else:
             ws.update_value(f'A{row}',urllist_or_toplist)
@@ -227,8 +227,8 @@ async def scrape():
             while m<len(scrape_target):
                 if m+3 == len(urllist):
                     urllist.append(0)
-                    toplist.append(0)
                 if toplist == []:
+                    toplist.append(0)
                     if (scraper('time',scrape_target[m],0)-datetime.datetime.now()).days>=7:
                         toplist[m]=-1
                     else:
