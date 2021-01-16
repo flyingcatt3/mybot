@@ -27,7 +27,8 @@ err_scrape_setup=':x:Format error.\nFor help, type `.scrape_setup`'
 err_scrape_setup_remove=':x:Format error.\nusage:``remove[設定編號]``'
 err_scrape_setup_note=':x:Format error.\nusage:``note[設定編號]``'
 
-urllist=toplist=[]
+urllist=['']*3
+toplist=[]
 
 PASS=':white_check_mark:Set up successfully.\n'
 timeouterr=':x:**操作逾時**'
@@ -166,11 +167,6 @@ async def scrape():
             await gsheet1(0,'fetch')
             gsheet2('fetch',0)
         asyncio.sleep(5)
-        if m==len(urllist):
-            i=0
-            while i<3:
-                urllist.append(0)
-                i+=1
 
         try:#s135=text,s246=url,s7=images
             newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
