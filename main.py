@@ -383,7 +383,7 @@ async def scrape_setup(ctx,arg):
                                 await ctx.send(PASS+f':information_source:將於稍後於{ch.mention}傳送 https://www.facebook.com/{arg[1]}/ 上的貼文，並每 **6~10 分鐘** 檢查更新{addition}')
                             await gsheet1(0,'create')
                         if comma2_isnotexist or arg[-1] == '':
-                            if int(ctx.channel.id) != channel1:
+                            if int(ctx.channel.id) != channel1 or int(ctx.author.id)==myid:
                                 await ctx.send(':mag:Checking...')
                                 scraper('time',arg[1],0)###
                                 if int(ctx.author.id) != myid:
@@ -405,7 +405,7 @@ async def scrape_setup(ctx,arg):
                                     tmp=0
                             else:
                                 await ctx.send(':x:此頻道不能被指定，因為其在例外中')
-                        elif int(arg[-1]) != channel1:
+                        elif int(arg[-1]) != channel1 or int(ctx.author.id)==myid:
                             for x in ctx.guild.channels:
                                 tmp=str(x.id).find(arg[-1])
                                 if tmp!=-1:
