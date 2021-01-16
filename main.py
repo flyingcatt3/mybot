@@ -95,6 +95,8 @@ async def gsheet1(ctx,method):
                 await ctx.send(f':white_check_mark:The note is added.\n{shurl}')
             except asyncio.TimeoutError:
                 await ctx.send(timeouterr)
+        elif ws1.get_value(f'C{n}')!='':
+            await ctx.send(':x:刪除失敗，因為之前已經刪除過')
         else:
             await ctx.send(f":warning:確定要刪除編號 **{n-1}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
             try:
