@@ -63,7 +63,10 @@ async def gsheet1(ctx,method):
             if i==len(D) or D[i]==['']:
                 break
             elif C[i]!=['']:
-                continue
+                if i+1==len(D):
+                    break
+                else:
+                    continue
             else:
                 scrape_platform.append(' '.join(D[i]))
                 scrape_target.append(' '.join(E[i]))
