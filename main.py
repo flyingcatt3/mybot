@@ -59,7 +59,7 @@ async def gsheet1(ctx,method):
         F=ws.get_values(start=(2,6), end=(N,6))
         G=ws.get_values(start=(2,7), end=(N,7))
         i=0
-        while i<100:
+        while i<N:
             if i==len(D) or D[i]==['']:
                 break
             elif C[i]!=['']:
@@ -105,15 +105,15 @@ def gsheet2(urllist_or_toplist,row):
     if urllist_or_toplist=='fetch':
         url=ws.get_values(start=(1,1), end=(103,1))
         top=ws.get_values(start=(1,2), end=(103,2))
-        
+        N=int(ws.get_value('C1'))
         i=j=0
-        while i<103:
+        while i<N:
             if i==len(url) or url[i]==['']:
                 break
             else:
                 urllist.append(' '.join(url[i]))
             i+=1
-        while j<103:
+        while j<N:
             if j==len(top) or top[j]==['']:
                 break
             else:
