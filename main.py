@@ -58,21 +58,17 @@ async def gsheet1(ctx,method):
     if method=='rows':
         return int(ws1.update_value('K1',f'=COUNTBLANK(C1:C{n})'))
     elif method=='fetch':
-        N=int(ws1.get_value('J1'))
-        C=ws1.get_values(start=(2,3), end=(N,3))
+        N=int(ws1.get_value('I1'))-1
         D=ws1.get_values(start=(2,4), end=(N,4))
         E=ws1.get_values(start=(2,5), end=(N,5))
         F=ws1.get_values(start=(2,6), end=(N,6))
         G=ws1.get_values(start=(2,7), end=(N,7))
         i=0
-        while i<N:
+        while i<N-1:
             if i==len(D) or D[i]==['']:
                 break
-            elif C[i]!=['']:
-                if i+1==len(D):
-                    break
-                else:
-                    continue
+            elif ws1.get_value(f'C{i+2}')!='':
+                continue
             else:
                 scrape_platform.append(' '.join(D[i]))
                 scrape_target.append(' '.join(E[i]))
