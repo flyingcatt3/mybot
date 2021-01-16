@@ -55,7 +55,9 @@ async def gsheet1(ctx,method):
         elif method.startswith('n'):
             ws1.update_value(f'H{n}',m.content)
             return 1
-    if method=='fetch':
+    if method=='rows':
+        return int(ws1.update_value('K1',f'=COUNTBLANK(C1:C{n})'))
+    elif method=='fetch':
         N=int(ws1.get_value('I1'))
         C=ws1.get_values(start=(2,3), end=(N,3))
         D=ws1.get_values(start=(2,4), end=(N,4))
@@ -224,17 +226,16 @@ async def scrape():
             await asyncio.sleep(random.choice(delay_choices1))
 
             m=0
+            rows=await gsheet1(0,'rows')
+            urllist.extend(['']*(rows+3-len(urllist)))
+            toplist.extend(['']*(rows-len(toplist)))
 
             while m<len(scrape_target):
-                if m+3 == len(urllist):
-                    urllist.append(0)
-                if toplist == []:
-                    toplist.append(0)
-                    if (scraper('time',scrape_target[m],0)-datetime.datetime.now()).days>=7:
-                        toplist[m]=-1
-                    else:
-                        toplist[m]=0
-                    gsheet2(toplist[m],m+4)
+                if (scraper('time',scrape_target[m],0)-datetime.datetime.now()).days>=7:
+                    toplist[m]=-1
+                else:
+                    toplist[m]=0
+                gsheet2(toplist[m],m+4)
                 newurl=scraper('post_url',scrape_target[m],toplist[m])
                 if newurl!=urllist[m+3] and newurl!=None:
                     gsheet2(newurl,m+4)
