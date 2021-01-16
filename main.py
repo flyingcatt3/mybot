@@ -58,7 +58,7 @@ async def gsheet1(ctx,method):
     if method=='rows':
         return int(ws1.update_value('K1',f'=COUNTBLANK(C1:C{n})'))
     elif method=='fetch':
-        N=int(ws1.get_value('I1'))
+        N=int(ws1.get_value('J1'))
         C=ws1.get_values(start=(2,3), end=(N,3))
         D=ws1.get_values(start=(2,4), end=(N,4))
         E=ws1.get_values(start=(2,5), end=(N,5))
