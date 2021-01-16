@@ -38,26 +38,29 @@ sh = gc.open_by_url(shurl)
 
 async def gsheet1(ctx,method):
     global sh,scrape_platform,scrape_target,scrape_ch,scrape_creator
-    ws = sh.worksheet_by_title('爬蟲組態')
+    ws1 = sh.worksheet_by_title('爬蟲組態')
+    ws2 = sh.worksheet_by_title('URL')
     def check(m):
         if m.content=='是':
-            ws.update_value(f'C{n}','=TODAY()')
-            ws.update_value(f'C{n}',ws.get_value(f'C{n}'))
+            ws1.update_value('K1',f'=COUNTBLANK(C1:C{n})')
+            ws2.delete_rows(int(ws1.get_value('K1'))+3)
+            ws1.update_value(f'C{n}','=TODAY()')
+            ws1.update_value(f'C{n}',ws1.get_value(f'C{n}'))
             scrape_platform.remove(scrape_platform[n-2])
             scrape_target.remove(scrape_target[n-2])
             scrape_ch.remove(scrape_ch[n-2])
             scrape_creator.remove(scrape_creator[n-2])
             return 1
         elif method=='n':
-            ws.update_value(f'H{n}',m.content)
+            ws1.update_value(f'H{n}',m.content)
             return 1
     if method=='fetch':
-        N=int(ws.get_value('I1'))
-        C=ws.get_values(start=(2,3), end=(N,3))
-        D=ws.get_values(start=(2,4), end=(N,4))
-        E=ws.get_values(start=(2,5), end=(N,5))
-        F=ws.get_values(start=(2,6), end=(N,6))
-        G=ws.get_values(start=(2,7), end=(N,7))
+        N=int(ws1.get_value('I1'))
+        C=ws1.get_values(start=(2,3), end=(N,3))
+        D=ws1.get_values(start=(2,4), end=(N,4))
+        E=ws1.get_values(start=(2,5), end=(N,5))
+        F=ws1.get_values(start=(2,6), end=(N,6))
+        G=ws1.get_values(start=(2,7), end=(N,7))
         i=0
         while i<N:
             if i==len(D) or D[i]==['']:
@@ -74,15 +77,15 @@ async def gsheet1(ctx,method):
                 scrape_creator.append(' '.join(G[i]))
             i+=1
     elif method=='create':
-        N=ws.get_value('I1')
-        ws.update_values(crange=f'D{N}:G{N}',values=[[scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
-        ws.update_value(f'B{N}','=TODAY()')
-        ws.update_value(f'B{N}',ws.get_value(f'B{N}'))
+        N=ws1.get_value('I1')
+        ws1.update_values(crange=f'D{N}:G{N}',values=[[scrape_platform[-1],scrape_target[-1],scrape_ch[-1],scrape_creator[-1]]])
+        ws1.update_value(f'B{N}','=TODAY()')
+        ws1.update_value(f'B{N}',ws1.get_value(f'B{N}'))
     else:
         n=int(method.strip()[1])+1
-        if ws.get_value(f'A{n}')=='':
+        if ws1.get_value(f'A{n}')=='':
             await ctx.send(':x:Error 404')
-        elif ws.get_value(f'G{n}')!=str(ctx.author):
+        elif ws1.get_value(f'G{n}')!=str(ctx.author):
             await ctx.send(':x:只有創建者才能進行操作')    
         elif method.strip()[0] == 'n':
             await ctx.send('請輸入備註:')
@@ -101,11 +104,12 @@ async def gsheet1(ctx,method):
 
 def gsheet2(urllist_or_toplist,row):
     global sh,urllist,toplist
-    ws = sh.worksheet_by_title('URL')
+    ws1 = sh.worksheet_by_title('爬蟲組態')
+    ws2 = sh.worksheet_by_title('URL')
     if urllist_or_toplist=='fetch':
-        url=ws.get_values(start=(1,1), end=(103,1))
-        top=ws.get_values(start=(1,2), end=(103,2))
-        N=int(ws.get_value('C1'))
+        N=int(ws1.get_value('J1'))
+        url=ws2.get_values(start=(1,1), end=(N+3,1))
+        top=ws2.get_values(start=(3,2), end=(N+3,2))
         i=j=0
         while i<N:
             if i==len(url) or url[i]==['']:
@@ -119,11 +123,10 @@ def gsheet2(urllist_or_toplist,row):
             else:
                 urllist.append(' '.join(top[j]))
             j+=1
+    elif type(urllist_or_toplist) == int:
+        ws2.update_value(f'B{row}',urllist_or_toplist)
     else:
-        if type(urllist_or_toplist) == int:
-            ws.update_value(f'B{row}',urllist_or_toplist)
-        else:
-            ws.update_value(f'A{row}',urllist_or_toplist)
+        ws2.update_value(f'A{row}',urllist_or_toplist)
 
 def gsheet3(a,b):
     global sh
