@@ -33,12 +33,13 @@ PASS=':white_check_mark:Set up successfully.'
 timeouterr=':x:**操作逾時**'
 
 gc = pygsheets.authorize(service_account_file='./credentials.json')
-sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ')
+shurl='https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ'
+sh = gc.open_by_url(shurl)
 
 async def gsheet1(ctx,method):
     global sh,scrape_platform,scrape_target,scrape_ch,scrape_creator
     ws = sh.worksheet_by_title('爬蟲組態')
-    async def check(m):
+    def check(m):
         if m.content=='是':
             ws.update_value(f'C{n}','=TODAY()')
             ws.update_value(f'C{n}',ws.get_value(f'C{n}'))
@@ -46,14 +47,13 @@ async def gsheet1(ctx,method):
             scrape_target.remove(scrape_target[n-2])
             scrape_ch.remove(scrape_ch[n-2])
             scrape_creator.remove(scrape_creator[n-2])
-            await ctx.send(':white_check_mark:Removed.')
             return 1
         elif method=='n':
             ws.update_value(f'H{n}',m.content)
-            await ctx.send(':white_check_mark:The note is added.')
             return 1
     if method=='fetch':
         N=int(ws.get_value('I1'))
+        C=ws.get_values(start=(2,3), end=(N,3))
         D=ws.get_values(start=(2,4), end=(N,4))
         E=ws.get_values(start=(2,5), end=(N,5))
         F=ws.get_values(start=(2,6), end=(N,6))
@@ -62,6 +62,8 @@ async def gsheet1(ctx,method):
         while i<100:
             if i==len(D) or D[i]==['']:
                 break
+            elif C[i]!='':
+                continue
             else:
                 scrape_platform.append(' '.join(D[i]))
                 scrape_target.append(' '.join(E[i]))
@@ -83,13 +85,14 @@ async def gsheet1(ctx,method):
             await ctx.send('請輸入備註:')
             try:
                 await bot.wait_for('message', timeout=60.0, check=check)
-
+                await ctx.send(f':white_check_mark:The note is added.\n{shurl}')
             except asyncio.TimeoutError:
                 await ctx.send(timeouterr)
         else:
-            await ctx.send(f":warning:確定要刪除編號 **{n}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
+            await ctx.send(f":warning:確定要刪除編號 **{n-1}** 的設定嗎？\n若要刪除，請在 30 秒內輸入 '是'")
             try:
-                await bot.wait_for('message', timeout=60.0, check=check)
+                await bot.wait_for('message', timeout=30.0, check=check)
+                await ctx.send(':white_check_mark:Removed.')
             except asyncio.TimeoutError:
                 await ctx.send(timeouterr)
 
@@ -99,6 +102,7 @@ def gsheet2(urllist_or_toplist,row):
     if urllist_or_toplist=='fetch':
         url=ws.get_values(start=(1,1), end=(103,1))
         top=ws.get_values(start=(1,2), end=(103,2))
+        
         i=j=0
         while i<103:
             if i==len(url) or url[i]==['']:
@@ -113,7 +117,7 @@ def gsheet2(urllist_or_toplist,row):
                 urllist.append(' '.join(top[j]))
             j+=1
     else:
-        if type(urllist_or_toplist.isdigit) == int:
+        if type(urllist_or_toplist) == int:
             ws.update_value(f'B{row}',urllist_or_toplist)
         else:
             ws.update_value(f'A{row}',urllist_or_toplist)
@@ -334,7 +338,7 @@ async def scrape_setup(ctx,arg):
     if arg == 'help':
         await ctx.send(help_scrape_setup)
     elif arg == 'list':
-        await ctx.send(':information_source:**爬蟲組態** https://docs.google.com/spreadsheets/d/14YsP3o_P_U3bNie-I5-CYIr1Ym26WMb404H3TprepbQ')
+        await ctx.send(f':information_source:**爬蟲組態** {shurl}')
     elif arg.startswith('remove'):
         arg=arg.replace('remove','')
         if arg.isdigit():
