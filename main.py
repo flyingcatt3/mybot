@@ -244,8 +244,29 @@ async def scrape():
                     urllist[m+3]=newurl
                     text=scraper('text',scrape_target[m],toplist[m])
                     images=scraper('images',scrape_target[m],toplist[m])
-                    S=text+'\n'+newurl
-                    await bot.get_channel(int(scrape_ch[m])).send(S)
+                    if len(text)>2000:
+                        text=text.split('\n')
+                        i=0
+                        length=len(text)
+                        if length<5:
+                            length1=0
+                        else:
+                            length1=math.floor(length/5)
+                        length2=length%5
+                        while i<=length1:
+                            result=''
+                            if i==length1:
+                                j=0
+                                while j<length2:
+                                    result+=text[i*5+j]
+                                    j+=1
+                            else:
+                                result=text[i*5]+text[i*5+1]+text[i*5+2]+text[i*5+3]+text[i*5+4]
+                            await bot.get_channel(int(scrape_ch[m])).send(result)
+                            i+=1
+                    else:
+                        await bot.get_channel(int(scrape_ch[m])).send(text)
+                    await bot.get_channel(int(scrape_ch[m])).send(newurl)
                     if images != []:
                         images='\n'.join(images)
                         await bot.get_channel(int(scrape_ch[m])).send(images)
