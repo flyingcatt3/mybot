@@ -233,7 +233,7 @@ async def scrape():
             toplist.extend(['']*(rows-len(toplist)))
 
             while m<len(scrape_target):
-                if (scraper('time',scrape_target[m],0)-datetime.datetime.now()).days>=7:
+                if (datetime.datetime.now()-scraper('time',scrape_target[m],0)).days>=7:
                     toplist[m]=-1
                 else:
                     toplist[m]=0
