@@ -56,7 +56,8 @@ async def gsheet1(ctx,method):
             ws1.update_value(f'H{n}',m.content)
             return 1
     if method=='rows':
-        return int(ws1.update_value('K1',f'=COUNTBLANK(C1:C{n})'))
+        ws1.update_value('K1',f"=COUNTBLANK(C2:C{int(ws1.get_value('I1'))-1})")
+        return int(ws1.get_value('K1'))
     elif method=='fetch':
         N=int(ws1.get_value('I1'))-1
         D=ws1.get_values(start=(2,4), end=(N,4))
@@ -66,9 +67,10 @@ async def gsheet1(ctx,method):
         i=0
         while i<N-1:
             if i==len(D) or D[i]==['']:
+                i+=1
                 break
             elif ws1.get_value(f'C{i+2}')!='':
-                continue
+                pass
             else:
                 scrape_platform.append(' '.join(D[i]))
                 scrape_target.append(' '.join(E[i]))
@@ -114,12 +116,14 @@ def gsheet2(urllist_or_toplist,row):
         i=j=0
         while i<N:
             if i==len(url) or url[i]==['']:
+                i+=1
                 break
             else:
                 urllist.append(' '.join(url[i]))
             i+=1
         while j<N:
             if j==len(top) or top[j]==['']:
+                j+=1
                 break
             else:
                 urllist.append(' '.join(top[j]))
@@ -166,7 +170,9 @@ async def scrape():
         if urllist==['']*3:
             await gsheet1(0,'fetch')
             gsheet2('fetch',0)
-        asyncio.sleep(5)
+            #print('\033[''1;92mSuccessful Fetching.\033[m')
+            logging.info('\033[''1;92mSuccessful Fetching.\033[m')
+            asyncio.sleep(5)
 
         try:#s135=text,s246=url,s7=images
             newurl_LEA=scraper('post_url','LearningEnglishAmericanWay',-1)
