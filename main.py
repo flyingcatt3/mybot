@@ -128,4 +128,4 @@ async def agterr(ctx,err):
 
 logging.basicConfig(level=logging.INFO)
 keep_alive.keep_alive()
-bot.run(os.environ('token'))
+bot.run(os.environ['token'])
