@@ -130,4 +130,4 @@ async def agterr(ctx,err):
 logging.basicConfig(level=logging.INFO)
 # Credentials
 load_dotenv('.env')
-bot.run(os.getenv('token'))
+bot.run(os.environ('token'))
