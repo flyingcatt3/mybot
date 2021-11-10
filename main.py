@@ -74,7 +74,7 @@ async def hulan(ctx,arg):
 async def agt(ctx,arg):
     p=random.randint(0,120)
     a=f"{arg} 有 **{p}%** 的可能去考指考"
-    b=f"騙人的吧<:is_that_a_lie:791199645102899200>...{arg} 只有 **{p}%** 的可能去考指考"
+    b=f"騙人的吧<:1_pepo:778999019682791474>...{arg} 只有 **{p}%** 的可能去考指考"
     
     link=['https://pse.is/3se6k2','https://i.imgur.com/qdIqIID.png','https://pse.is/3srfgz']
     
