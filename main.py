@@ -6,9 +6,6 @@ from discord.ext import commands,tasks
 bot=commands.Bot(command_prefix='.')
 botid=782305505842036806
 myid=366492389063393281
-#token
-with open("token.txt") as f:
-    token = f.read().strip()
 channel1=701153967412871268
 channel2=617284939053793298
 intents = discord.Intents(messages=True, guilds=True, members=True)
@@ -130,4 +127,7 @@ async def agterr(ctx,err):
         await agt(ctx,ctx.author.mention)
 
 logging.basicConfig(level=logging.INFO)
+
+with open("token.txt") as f:
+    token = f.read().strip()
 bot.run(token)
