@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
-import asyncio,logging,traceback,discord,time,datetime,random,math,pygsheets
+import asyncio,logging,discord,datetime,random,os
 from discord.ext import commands,tasks
+from dotenv import load_dotenv
 
 #bot
 bot=commands.Bot(command_prefix='.')
@@ -127,7 +128,6 @@ async def agterr(ctx,err):
         await agt(ctx,ctx.author.mention)
 
 logging.basicConfig(level=logging.INFO)
-
-with open("token.txt") as f:
-    token = f.read().strip()
-bot.run(token)
+# Credentials
+load_dotenv('.env')
+bot.run(os.getenv('token'))
