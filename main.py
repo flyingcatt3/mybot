@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import asyncio,logging,discord,datetime,random,os,keep_alive
+import asyncio,logging,discord,datetime,random,os,keep_alive,itertools
 from discord.ext import commands,tasks
 
 #bot
@@ -22,7 +22,7 @@ async def on_message(msg):
     for x in msg.mentions:
         if int(x.id)==botid and int(msg.author.id)!=botid:
             embed = discord.Embed(title='The bot is still under development',description=f"Coded and owned by <@!{myid}>",timestamp=msg.created_at,color=discord.Color.red())
-            embed.add_field(name="功能不斷增加中",value='Ver. 20211111')
+            embed.add_field(name="功能不斷增加中",value='Ver. 20211112')
             await msg.channel.send(embed=embed)
             break
         #await msg.channel.send(x)
@@ -73,8 +73,8 @@ async def hulan(ctx,arg):
 @bot.command()
 async def agt(ctx,arg):
     p=random.randint(0,120)
-    a=f"{arg} 有 **{p}%** 的可能去考指考"
-    b=f"騙人的吧<:1_pepo:778999019682791474>...{arg} 只有 **{p}%** 的可能去考指考"
+    a=f"{arg} 有 **{p}%** 的可能去考分科測驗"
+    b=f"騙人的吧<:1_pepo:778999019682791474>...{arg} 只有 **{p}%** 的可能去考分科測驗"
     
     link=['https://pse.is/3se6k2','https://i.imgur.com/qdIqIID.png','https://pse.is/3srfgz']
     
@@ -91,6 +91,17 @@ async def agt(ctx,arg):
 @bot.command()#這是最短，最單純，最美麗的function
 async def getchannelid(ctx):
     await ctx.send(ctx.channel.id)
+
+status = itertools.cycle(['with Python','lazzicat'])
+
+@bot.event
+async def on_ready():
+  change_status.start()
+  print("Your bot is ready")
+
+@tasks.loop(seconds=10)
+async def change_status():
+  await bot.change_presence(activity=discord.Game(next(status)))
 
 #Error Handler
 @exam.error#ok
