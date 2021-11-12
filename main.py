@@ -32,7 +32,7 @@ async def on_message(msg):
 async def exam(ctx,arg):
     global TIME,sort,err_exam
     if arg == 'help':
-        await ctx.send('e.g. ``.exam 公測,20221106``')
+        await ctx.send('e.g. `.exam 公測,20221106`')
     elif arg == 'reset':
         await ctx.send(':white_check_mark:Reset successfully.')
         TIME=0
@@ -91,6 +91,10 @@ async def agt(ctx,arg):
 @bot.command()#這是最短，最單純，最美麗的function
 async def getchannelid(ctx):
     await ctx.send(ctx.channel.id)
+
+@bot.command()
+async def now(ctx):
+    await ctx.send(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %p"))
 
 status = itertools.cycle(['with Python','lazzicat'])
 
