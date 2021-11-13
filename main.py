@@ -151,7 +151,7 @@ async def hulanerr(ctx,err):
         await bot.wait_until_ready()
         await ctx.send(':x:既然你不指定參數，那我要...')
         time.sleep(2)
-        await hulan(ctx,bot.get_user(ctx.author.id).mention)
+        await hulan(ctx,ctx.author.mention)
 
 @agt.error
 async def agterr(ctx,err):
