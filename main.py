@@ -18,8 +18,8 @@ get_or_create_eventloop()
 bot=commands.Bot(command_prefix='.')
 botid=782305505842036806
 myid=366492389063393281
-channel1=701153967412871268
-channel2=617284939053793298
+#channel1=701153967412871268
+#channel2=617284939053793298
 intents = discord.Intents(messages=True, guilds=True, members=True)
 status = itertools.cycle(['with Python','lazzicat'])
 discord.MemberCacheFlags(online=True)
@@ -150,7 +150,7 @@ async def hulanerr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         await bot.wait_until_ready()
         await ctx.send(':x:既然你不指定參數，那我要...')
-        await asyncio.sleep(2)
+        time.sleep(2)
         await hulan(ctx,bot.get_user(ctx.author.id).mention)
 
 @agt.error
