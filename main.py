@@ -20,6 +20,7 @@ myid=366492389063393281
 channel1=701153967412871268
 channel2=617284939053793298
 intents = discord.Intents(messages=True, guilds=True, members=True)
+status = discord.Game(next(itertools.cycle(['with Python','lazzicat'])))
 discord.MemberCacheFlags(online=True)
 TIME=sort=0 #exam
 PASS=':white_check_mark:Set up successfully.\n'
@@ -107,8 +108,6 @@ async def getchannelid(ctx):
 async def now(ctx):
     await ctx.send(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %p"))
 
-status = itertools.cycle(['with Python','lazzicat'])
-
 @bot.event
 async def on_ready():
   change_status.start()
@@ -116,7 +115,7 @@ async def on_ready():
 
 @tasks.loop(seconds=10)
 async def change_status():
-  await bot.change_presence(activity=discord.Game(next(status)))
+  await bot.change_presence(activity=status)
 
 #Error Handler
 @exam.error#ok
@@ -153,5 +152,5 @@ async def agterr(ctx,err):
         await agt(ctx,ctx.author.mention)
 
 logging.basicConfig(level=logging.INFO)
-#keep_alive.keep_alive()
 bot.run(os.environ['token'])
+keep_alive.keep_alive()
