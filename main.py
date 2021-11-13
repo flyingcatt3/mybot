@@ -30,10 +30,11 @@ PASS=':white_check_mark:Set up successfully.\n'
 err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
 logging.basicConfig(level=logging.INFO)
-keep_alive.keep_alive()
+Thread(target=keep_alive.keep_alive()).start()
 loop = asyncio.get_event_loop()
 loop.create_task(bot.start(os.environ['token']))
 Thread(target=loop.run_forever).start()
+
 
 @bot.event#ok
 async def on_message(msg):
