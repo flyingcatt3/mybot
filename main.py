@@ -31,7 +31,7 @@ err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
 streamlit.write('Bot is running.')
 logging.basicConfig(level=logging.INFO)
-loop = asyncio.get_event_loop()
+loop = get_or_create_eventloop()
 loop.create_task(bot.start(os.environ['token']))
 Boot=Thread(target=loop.run_forever())
 Boot.start()
