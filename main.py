@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import asyncio,logging,discord,datetime,random,os,itertools,streamlit
+import asyncio,logging,discord,datetime,random,os,itertools,streamlit,time
 from discord.ext import commands,tasks
 from threading import Thread
 
@@ -31,8 +31,8 @@ err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
 streamlit.write('Bot is running.')
 logging.basicConfig(level=logging.INFO)
-#bot.run(os.environ['token'])
 loop = get_or_create_eventloop()
+time.sleep(3)
 loop.create_task(bot.start(os.environ['token']))
 Boot=Thread(target=loop.run_forever)
 Boot.start()
