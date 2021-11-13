@@ -36,6 +36,7 @@ time.sleep(3)
 loop.create_task(bot.start(os.environ['token']))
 Boot=Thread(target=loop.run_forever)
 Boot.start()
+streamlit.report_thread.get_report_ctx()
 
 @bot.event#ok
 async def on_message(msg):
@@ -43,7 +44,7 @@ async def on_message(msg):
     for x in msg.mentions:
         if int(x.id)==botid and int(msg.author.id)!=botid:
             embed = discord.Embed(title='The bot is still under development',description=f"Coded and owned by <@!{myid}>",timestamp=msg.created_at,color=discord.Color.red())
-            embed.add_field(name="功能不斷增加中",value='Ver. 20211112')
+            embed.add_field(name="功能不斷增加中",value='Ver. 20211113')
             await msg.channel.send(embed=embed)
             break
         #await msg.channel.send(x)
