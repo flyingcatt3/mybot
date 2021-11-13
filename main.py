@@ -33,7 +33,7 @@ streamlit.write('Bot is running.')
 logging.basicConfig(level=logging.INFO)
 loop = asyncio.get_event_loop()
 loop.create_task(bot.start(os.environ['token']))
-Boot=Thread(target=loop.run_forever)
+Boot=Thread(target=loop)
 Boot.start()
 
 @bot.event#ok
