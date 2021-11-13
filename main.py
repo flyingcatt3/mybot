@@ -34,7 +34,7 @@ logging.basicConfig(level=logging.INFO)
 loop = get_or_create_eventloop()
 time.sleep(3)
 loop.create_task(bot.start(os.environ['token']))
-boot=Thread(target=loop)
+boot=Thread(target=loop.run_forever)
 streamlit.report_thread.add_report_ctx(boot)
 boot.start()
 
