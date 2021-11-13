@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import asyncio,logging,discord,datetime,random,os,keep_alive,itertools,streamlit
+import asyncio,logging,discord,datetime,random,os,itertools,streamlit
 from discord.ext import commands,tasks
 from threading import Thread
 
@@ -29,7 +29,7 @@ PASS=':white_check_mark:Set up successfully.\n'
 #@exam()
 err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
-keep_alive.keep_alive()
+streamlit.write('Bot is running.')
 logging.basicConfig(level=logging.INFO)
 loop = asyncio.get_event_loop()
 loop.create_task(bot.start(os.environ['token']))
