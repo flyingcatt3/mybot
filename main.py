@@ -34,7 +34,9 @@ logging.basicConfig(level=logging.INFO)
 loop = get_or_create_eventloop()
 time.sleep(3)
 loop.create_task(bot.start(os.environ['token']))
-Thread(target=loop.run_forever).start()
+boot=Thread(target=loop)
+streamlit.report_thread.add_report_ctx(boot)
+boot.start()
 
 @bot.event
 async def on_ready():
