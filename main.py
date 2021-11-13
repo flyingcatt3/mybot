@@ -21,7 +21,7 @@ myid=366492389063393281
 channel1=701153967412871268
 channel2=617284939053793298
 intents = discord.Intents(messages=True, guilds=True, members=True)
-status = discord.Game(next(itertools.cycle(['with Python','lazzicat'])))
+status = itertools.cycle(['with Python','lazzicat'])
 discord.MemberCacheFlags(online=True)
 TIME=sort=0 #exam
 PASS=':white_check_mark:Set up successfully.\n'
@@ -35,7 +35,6 @@ keep_alive.keep_alive()
 loop.create_task(bot.start(os.environ['token']))
 Boot=Thread(target=loop.run_forever)
 Boot.start()
-Boot.join()
 
 @bot.event#ok
 async def on_message(msg):
@@ -124,7 +123,7 @@ async def on_ready():
 
 @tasks.loop(seconds=10)
 async def change_status():
-  await bot.change_presence(activity=status)
+  await bot.change_presence(activity=discord.Game(next(status)))
 
 #Error Handler
 @exam.error#ok
