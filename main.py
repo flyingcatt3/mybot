@@ -34,12 +34,17 @@ logging.basicConfig(level=logging.INFO)
 loop = get_or_create_eventloop()
 time.sleep(3)
 loop.create_task(bot.start(os.environ['token']))
-Boot=Thread(target=loop.run_forever,args=(0,0))
+Boot=Thread(target=loop.run_forever)
 streamlit.report_thread.add_report_ctx(Boot)
 Boot.start()
-streamlit.report_thread.get_report_ctx()
+streamlit.report_thread.get_report_ctx(Boot)
 
-@bot.event#ok
+@bot.event
+async def on_ready():
+    change_status.start()
+    print("Your bot is ready")
+
+@bot.event
 async def on_message(msg):
     global botid
     for x in msg.mentions:
@@ -51,7 +56,7 @@ async def on_message(msg):
         #await msg.channel.send(x)
     await bot.process_commands(msg)
 
-@bot.command()#ok
+@bot.command()
 async def exam(ctx,arg):
     global TIME,sort,err_exam
     if arg == 'help':
@@ -83,13 +88,13 @@ async def exam(ctx,arg):
     else:
         await ctx.send(err_exam)
 
-@bot.command()#ok
+@bot.command()
 async def starburst(ctx):
     await ctx.send('https://hbl917070.cf/img/murl/SgsU3cr.jpg')
     if random.randint(1, 10)==1:
         await ctx.send('原來你沒收到封測的邀請嗎？')
 
-@bot.command()#ok
+@bot.command()
 async def hulan(ctx,arg):
     await ctx.send(f'**{arg}**一進dc，所有聊天的人便開始對著他嘲諷，有的叫道，\n「**{arg}**，你的噁男身份組又添上新的了！」\n他不回答，對其他人說，「我不是甲。」便排出我不是噁男幾個字。\n他們又故意的高聲嚷道，「吼 你又好想狠狠的跳起來了！」\n**{arg}**睜大眼睛說，「你怎麼這樣憑空污人清白……」「什麼清白?我前天親眼見你噁人，還裝。」**{arg}**便漲紅了臉，額上的青筋條條綻出，爭辯道，「搭訕的事不能算……人際交流！……欣賞人的事，能算噁麼？」\n接連便是難懂的話，什麼「要是我是妹子」，什麼「我也很喜歡蘿莉」之類，引得眾人都鬨笑起來：群組內充滿了快活的空氣。')
 
@@ -119,17 +124,12 @@ async def getchannelid(ctx):
 async def now(ctx):
     await ctx.send(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %p"))
 
-@bot.event
-async def on_ready():
-  change_status.start()
-  print("Your bot is ready")
-
 @tasks.loop(seconds=10)
 async def change_status():
   await bot.change_presence(activity=discord.Game(next(status)))
 
 #Error Handler
-@exam.error#ok
+@exam.error
 async def examerr(ctx,err):
     global TIME,sort
     if isinstance(err,commands.errors.MissingRequiredArgument):
@@ -148,7 +148,7 @@ async def examerr(ctx,err):
             else:
                 await ctx.send(f"Time remaining of **{sort}**: **{remaining} days**")
 
-@hulan.error#ok
+@hulan.error
 async def hulanerr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         await bot.wait_until_ready()
@@ -156,7 +156,7 @@ async def hulanerr(ctx,err):
         await asyncio.sleep(2)
         await hulan(ctx,bot.get_user(ctx.author.id).mention)
 
-@agt.error#ok
+@agt.error
 async def agterr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         await bot.wait_until_ready()
