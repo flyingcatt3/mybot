@@ -1,2 +1,3 @@
 discord.py
 flask
+click==7.0
