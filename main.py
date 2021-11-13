@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import asyncio,logging,discord,datetime,random,os,keep_alive,itertools
 from discord.ext import commands,tasks
+from threading import Thread
 
 def get_or_create_eventloop():
     try:
@@ -27,6 +28,12 @@ PASS=':white_check_mark:Set up successfully.\n'
 
 #@exam()
 err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
+
+logging.basicConfig(level=logging.INFO)
+keep_alive.keep_alive()
+loop = asyncio.get_event_loop()
+loop.create_task(bot.start(os.environ['token']))
+Thread(target=loop.run_forever).start()
 
 @bot.event#ok
 async def on_message(msg):
@@ -150,7 +157,3 @@ async def agterr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         await bot.wait_until_ready()
         await agt(ctx,ctx.author.mention)
-
-logging.basicConfig(level=logging.INFO)
-#keep_alive.keep_alive()
-bot.start(os.environ['token'])
