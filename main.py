@@ -29,9 +29,9 @@ PASS=':white_check_mark:Set up successfully.\n'
 #@exam()
 err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
+keep_alive.keep_alive()
 logging.basicConfig(level=logging.INFO)
 loop = asyncio.get_event_loop()
-keep_alive.keep_alive()
 loop.create_task(bot.start(os.environ['token']))
 Boot=Thread(target=loop.run_forever)
 Boot.start()
