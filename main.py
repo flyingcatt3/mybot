@@ -31,11 +31,12 @@ err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
 streamlit.write('Bot is running.')
 logging.basicConfig(level=logging.INFO)
-bot.run(os.environ['token'])
-#loop = get_or_create_eventloop()
-#loop.create_task(bot.start(os.environ['token']))
-#Boot=Thread(target=loop.run_forever())
-#Boot.start()
+#bot.run(os.environ['token'])
+token=os.environ['token']
+loop = get_or_create_eventloop()
+loop.create_task(bot.start(token))
+Boot=Thread(target=loop)
+Boot.start()
 
 @bot.event#ok
 async def on_message(msg):
