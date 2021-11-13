@@ -36,7 +36,7 @@ time.sleep(3)
 loop.create_task(bot.start(os.environ['token']))
 boot=Thread(target=loop.run_forever)
 streamlit.report_thread.add_report_ctx(boot)
-boot.start()
+boot.run()
 
 @bot.event
 async def on_ready():
