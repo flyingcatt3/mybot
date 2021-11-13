@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import asyncio,logging,discord,datetime,random,os,keep_alive,itertools
+import asyncio,logging,discord,datetime,random,os,keep_alive,itertools,streamlit
 from discord.ext import commands,tasks
 from threading import Thread
 
@@ -30,11 +30,12 @@ PASS=':white_check_mark:Set up successfully.\n'
 err_exam=":x:Format error."+'\n'+"For help, type `.exam help`."
 
 logging.basicConfig(level=logging.INFO)
-Thread(target=keep_alive.keep_alive()).start()
 loop = asyncio.get_event_loop()
+loop.create_task(keep_alive.keep_alive())
 loop.create_task(bot.start(os.environ['token']))
-Thread(target=loop.run_forever).start()
-
+Boot=Thread(target=loop.run_forever)
+streamlit.report_thread.add_report_ctx(Boot)
+Boot.start()
 
 @bot.event#ok
 async def on_message(msg):
