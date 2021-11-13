@@ -153,5 +153,5 @@ async def agterr(ctx,err):
         await agt(ctx,ctx.author.mention)
 
 logging.basicConfig(level=logging.INFO)
-keep_alive.keep_alive()
+#keep_alive.keep_alive()
 bot.run(os.environ['token'])
