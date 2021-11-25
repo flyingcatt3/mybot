@@ -49,7 +49,7 @@ async def on_message(msg):
     for x in msg.mentions:
         if int(x.id)==botid and int(msg.author.id)!=botid:
             embed = discord.Embed(title='The bot is still under development',description=f"Developed with :blue_heart: by <@!{myid}>",color=discord.Color.red())
-            embed.add_field(name="功能不斷增加中",value='Ver. 20211114')
+            embed.add_field(name="功能不斷增加中",value='Ver. 20211125')
             embed.add_field(name="Github",value='https://github.com/flyingcatt3/mybot')
             await msg.channel.send(embed=embed)
             break
@@ -115,6 +115,12 @@ async def agt(ctx,arg):
         await ctx.send(b)
     else:
         await ctx.send(a)
+
+@bot.command()
+async def gay(ctx,arg):
+    p=random.randint(0,100)
+    msg=f"{arg} is **{p}%** gay"
+    await ctx.send(msg)
 
 @bot.command()#這是最短，最單純，最美麗的function
 async def getchannelid(ctx):
