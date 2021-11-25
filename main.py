@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import asyncio,logging,discord,datetime,random,os,itertools,streamlit,time
+import asyncio,logging,discord,datetime,random,os,itertools,streamlit,time,secrets
 from discord.ext import commands,tasks
 from threading import Thread
 
@@ -91,7 +91,7 @@ async def exam(ctx,arg):
 @bot.command()
 async def starburst(ctx):
     await ctx.send('https://hbl917070.cf/img/murl/SgsU3cr.jpg')
-    if random.randint(1, 10)==1:
+    if secrets.randbelow(10)==0:
         await ctx.send('原來你沒收到封測的邀請嗎？')
 
 @bot.command()
@@ -100,10 +100,9 @@ async def hulan(ctx,arg):
 
 @bot.command()
 async def agt(ctx,arg):
-    p=random.randint(0,120)
+    p=secrets.randbelow(120)
     a=f"{arg} 有 **{p}%** 的可能去考分科測驗"
     b=f"騙人的吧<:1_pepo:778999019682791474>...{arg} 只有 **{p}%** 的可能去考分科測驗"
-    
     link=['https://pse.is/3se6k2','https://i.imgur.com/qdIqIID.png','https://pse.is/3srfgz']
     
     if p>100:
@@ -118,7 +117,7 @@ async def agt(ctx,arg):
 
 @bot.command()
 async def gay(ctx,arg):
-    p=random.randint(0,100)
+    p=secrets.randbelow(101)
     msg=f"{arg} is **{p}%** gay"
     await ctx.send(msg)
 
