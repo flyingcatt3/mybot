@@ -118,7 +118,10 @@ async def agt(ctx,arg):
 @bot.command()
 async def gay(ctx,arg):
     p=secrets.randbelow(101)
-    msg=f"{arg} is **{p}%** gay"
+    if int(arg.id)==botid:
+        msg=f"{ctx.author.mention} is **{p}%** gay"
+    else:
+        msg=f"{arg} is **{p}%** gay"
     await ctx.send(msg)
 
 @bot.command()#這是最短，最單純，最美麗的function
@@ -157,9 +160,10 @@ async def examerr(ctx,err):
 async def hulanerr(ctx,err):
     if isinstance(err,commands.errors.MissingRequiredArgument):
         await bot.wait_until_ready()
-        await ctx.send(':x:既然你不指定參數，那我要...')
+        await ctx.send(':x:請指定參數')
         time.sleep(2)
-        await hulan(ctx,ctx.author.mention)
+        if secrets.randbelow(10)==0:
+            await hulan(ctx,ctx.author.mention)
 
 @agt.error
 async def agterr(ctx,err):
