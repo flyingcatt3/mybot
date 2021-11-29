@@ -49,7 +49,7 @@ async def on_message(msg):
     for x in msg.mentions:
         if int(x.id)==botid and int(msg.author.id)!=botid:
             embed = discord.Embed(title='The bot is still under development',description=f"Developed with :blue_heart: by <@!{myid}>",color=discord.Color.red())
-            embed.add_field(name="版本",value='Ver. 20211125')
+            embed.add_field(name="版本",value='Ver. 20211129')
             embed.add_field(name="Github",value='https://github.com/flyingcatt3/mybot')
             await msg.channel.send(embed=embed)
             break
