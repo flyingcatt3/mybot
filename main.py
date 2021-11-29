@@ -118,10 +118,11 @@ async def agt(ctx,arg):
 @bot.command()
 async def gay(ctx,arg):
     p=secrets.randbelow(101)
-    if int(arg).id==botid:
-        msg=f"{ctx.author.mention} is **{p}%** gay"
-    else:
-        msg=f"{arg} is **{p}%** gay"
+    for x in msg.mentions:
+        if int(x.id)==botid:
+            msg=f"{ctx.author.mention} is **{p}%** gay"
+        else:
+            msg=f"{arg} is **{p}%** gay"
     await ctx.send(msg)
 
 @bot.command()#這是最短，最單純，最美麗的function
