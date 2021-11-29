@@ -52,6 +52,7 @@ async def on_message(msg):
             embed.add_field(name="版本",value='Ver. 20211129')
             embed.add_field(name="Github",value='https://github.com/flyingcatt3/mybot')
             await msg.channel.send(embed=embed)
+            await msg.channel.send(msg)
             break
         #await msg.channel.send(x)
     await bot.process_commands(msg)
