@@ -118,7 +118,7 @@ async def agt(ctx,arg):
 @bot.command()
 async def gay(ctx,arg):
     p=secrets.randbelow(101)
-    for x in msg.mentions:
+    for x in arg.mentions:
         if int(x.id)==botid:
             msg=f"{ctx.author.mention} is **{p}%** gay"
         else:
